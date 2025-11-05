@@ -12,6 +12,9 @@ from PyQt5.QtGui import QFont, QIcon
 # Add the parent directory to the path to import other modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Import navigation bar
+from GUI.navigation_bar import NavigationBar
+
 class DepartmentsAndPositionsScreen(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -206,165 +209,9 @@ class DepartmentsAndPositionsScreen(QMainWindow):
     
     def create_navigation_bar(self):
         """Create the navigation bar at the bottom of the screen"""
-        # Create a frame for the navigation bar with fixed height
-        nav_frame = QFrame()
-        nav_frame.setFrameStyle(QFrame.Box)
-        nav_frame.setFixedHeight(60)  # Fixed height for consistency
-        nav_frame.setStyleSheet("""
-            QFrame {
-                background-color: #34495e;
-                border: 1px solid #2c3e50;
-                border-radius: 5px;
-                margin: 2px;
-            }
-        """)
-        
-        nav_layout = QHBoxLayout(nav_frame)
-        nav_layout.setContentsMargins(15, 8, 15, 8)
-        nav_layout.setSpacing(10)
-        
-        # Access Matrix button
-        access_matrix_btn = QPushButton("Access Matrix")
-        access_matrix_btn.setFixedHeight(40)  # Fixed height for buttons
-        access_matrix_btn.setMinimumWidth(120)  # Minimum width
-        access_matrix_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #3498db;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-size: 10pt;
-            }
-            QPushButton:hover {
-                background-color: #2980b9;
-            }
-        """)
-        access_matrix_btn.clicked.connect(self.go_back_to_main)
-        nav_layout.addWidget(access_matrix_btn)
-        
-        # Departments and Positions button (current screen)
-        departments_btn = QPushButton("Departments and Positions")
-        departments_btn.setFixedHeight(40)  # Fixed height for buttons
-        departments_btn.setMinimumWidth(180)  # Minimum width
-        departments_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #2c3e50;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-size: 10pt;
-            }
-            QPushButton:hover {
-                background-color: #1a252f;
-            }
-        """)
-        departments_btn.setEnabled(False)  # Disable since we're already on this screen
-        nav_layout.addWidget(departments_btn)
-        
-        # Hotel Systems button
-        hotel_systems_btn = QPushButton("Hotel Systems")
-        hotel_systems_btn.setFixedHeight(40)  # Fixed height for buttons
-        hotel_systems_btn.setMinimumWidth(120)  # Minimum width
-        hotel_systems_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #3498db;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-size: 10pt;
-            }
-            QPushButton:hover {
-                background-color: #2980b9;
-            }
-        """)
-        hotel_systems_btn.clicked.connect(self.go_to_hotel_systems)
-        nav_layout.addWidget(hotel_systems_btn)
-        
-        # Form button
-        form_btn = QPushButton("Form")
-        form_btn.setFixedHeight(40)  # Fixed height for buttons
-        form_btn.setMinimumWidth(80)  # Minimum width
-        form_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #3498db;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-size: 10pt;
-            }
-            QPushButton:hover {
-                background-color: #2980b9;
-            }
-        """)
-        form_btn.clicked.connect(self.go_to_form)
-        nav_layout.addWidget(form_btn)
-        
-        # Add stretch to push exit button to the right
-        nav_layout.addStretch()
-        
-        # Exit button
-        exit_button = QPushButton("Exit")
-        exit_button.setFixedHeight(40)  # Fixed height for buttons
-        exit_button.setMinimumWidth(80)  # Minimum width
-        exit_button.setStyleSheet("""
-            QPushButton {
-                background-color: #e74c3c;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-size: 10pt;
-            }
-            QPushButton:hover {
-                background-color: #c0392b;
-            }
-        """)
-        exit_button.clicked.connect(self.close)
-        nav_layout.addWidget(exit_button)
-        
-        self.main_layout.addWidget(nav_frame)
+        nav_bar = NavigationBar(self, "departments")
+        self.main_layout.addWidget(nav_bar)
     
-    def go_back_to_main(self):
-        """Go back to the main screen"""
-        # Import here to avoid circular import
-        try:
-            from GUI.main_screen import MainScreen
-            self.main_screen = MainScreen()
-            self.main_screen.show()
-            self.close()  # Close the current screen
-        except ImportError as e:
-            QMessageBox.critical(self, "Error", f"Failed to import main screen: {str(e)}")
-    
-    def go_to_hotel_systems(self):
-        """Go to the hotel systems screen"""
-        # Import here to avoid circular import
-        try:
-            from GUI.hotel_systems import HotelSystemsScreen
-            self.hotel_systems_screen = HotelSystemsScreen()
-            self.hotel_systems_screen.show()
-            self.close()  # Close the current screen
-        except ImportError as e:
-            QMessageBox.critical(self, "Error", f"Failed to import hotel systems screen: {str(e)}")
-    
-    def go_to_form(self):
-        """Go to the form screen"""
-        # Import here to avoid circular import
-        try:
-            from GUI.Form import FormScreen
-            self.form_screen = FormScreen()
-            self.form_screen.show()
-            self.close()  # Close the current screen
-        except ImportError as e:
-            QMessageBox.critical(self, "Error", f"Failed to import form screen: {str(e)}")
     
     def create_department_buttons(self, dept_item):
         """Create Edit and Delete buttons for a department item"""

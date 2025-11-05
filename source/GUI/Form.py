@@ -12,12 +12,16 @@ from PyQt5.QtGui import QFont, QIcon
 # Add the parent directory to the path to import other modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Templates.access_template_generator import PDF, create_custom_pdf
+from Templates.departure_template import SeparationChecklistPDF
+
+# Import navigation bar
+from GUI.navigation_bar import NavigationBar
 
 class FormScreen(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Waldorf Access Form Generator - Sign In and Departure Form")
-        self.setGeometry(100, 100, 850, 750)
+        self.setGeometry(100, 100, 1200, 800)
         
         # Set window icon
         icon_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "assets", "waldorf_ico.ico")
@@ -431,132 +435,8 @@ class FormScreen(QMainWindow):
     
     def create_navigation_bar(self):
         """Create the navigation bar at the bottom of the screen"""
-        # Create a frame for the navigation bar with fixed height
-        nav_frame = QFrame()
-        nav_frame.setFrameStyle(QFrame.Box)
-        nav_frame.setFixedHeight(60)  # Fixed height for consistency
-        nav_frame.setStyleSheet("""
-            QFrame {
-                background-color: #34495e;
-                border: 1px solid #2c3e50;
-                border-radius: 5px;
-                margin: 2px;
-            }
-        """)
-        
-        nav_layout = QHBoxLayout(nav_frame)
-        nav_layout.setContentsMargins(15, 8, 15, 8)
-        nav_layout.setSpacing(10)
-        
-        # Access Matrix button
-        access_matrix_btn = QPushButton("Access Matrix")
-        access_matrix_btn.setFixedHeight(40)  # Fixed height for buttons
-        access_matrix_btn.setMinimumWidth(120)  # Minimum width
-        access_matrix_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #3498db;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-size: 10pt;
-            }
-            QPushButton:hover {
-                background-color: #2980b9;
-            }
-        """)
-        access_matrix_btn.clicked.connect(self.go_back_to_main)
-        nav_layout.addWidget(access_matrix_btn)
-        
-        # Departments and Positions button
-        departments_btn = QPushButton("Departments and Positions")
-        departments_btn.setFixedHeight(40)  # Fixed height for buttons
-        departments_btn.setMinimumWidth(180)  # Minimum width
-        departments_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #3498db;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-size: 10pt;
-            }
-            QPushButton:hover {
-                background-color: #2980b9;
-            }
-        """)
-        departments_btn.clicked.connect(self.go_to_departments)
-        nav_layout.addWidget(departments_btn)
-        
-        # Hotel Systems button
-        hotel_systems_btn = QPushButton("Hotel Systems")
-        hotel_systems_btn.setFixedHeight(40)  # Fixed height for buttons
-        hotel_systems_btn.setMinimumWidth(120)  # Minimum width
-        hotel_systems_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #3498db;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-size: 10pt;
-            }
-            QPushButton:hover {
-                background-color: #2980b9;
-            }
-        """)
-        hotel_systems_btn.clicked.connect(self.go_to_hotel_systems)
-        nav_layout.addWidget(hotel_systems_btn)
-        
-        # Form button (current screen)
-        form_btn = QPushButton("Form")
-        form_btn.setFixedHeight(40)  # Fixed height for buttons
-        form_btn.setMinimumWidth(80)  # Minimum width
-        form_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #2c3e50;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-size: 10pt;
-            }
-            QPushButton:hover {
-                background-color: #1a252f;
-            }
-        """)
-        form_btn.setEnabled(False)  # Disable since we're already on this screen
-        nav_layout.addWidget(form_btn)
-        
-        # Add stretch to push exit button to the right
-        nav_layout.addStretch()
-        
-        # Exit button
-        exit_button = QPushButton("Exit")
-        exit_button.setFixedHeight(40)  # Fixed height for buttons
-        exit_button.setMinimumWidth(80)  # Minimum width
-        exit_button.setStyleSheet("""
-            QPushButton {
-                background-color: #e74c3c;
-                color: white;
-                border: none;
-                padding: 8px 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                font-size: 10pt;
-            }
-            QPushButton:hover {
-                background-color: #c0392b;
-            }
-        """)
-        exit_button.clicked.connect(self.close)
-        nav_layout.addWidget(exit_button)
-        
-        self.main_layout.addWidget(nav_frame)
+        nav_bar = NavigationBar(self, "form")
+        self.main_layout.addWidget(nav_bar)
     
     def browse_directory(self):
         """Open directory browser to select generated forms directory"""
@@ -785,8 +665,67 @@ class FormScreen(QMainWindow):
             QMessageBox.critical(self, "Error", f"Failed to generate sign in form: {str(e)}")
     
     def generate_departure_form(self):
-        """Generate the departure form PDF (placeholder for now)"""
-        QMessageBox.information(self, "Info", "Departure form generation is not implemented yet")
+        """Generate the departure form PDF"""
+        # Check if directory is selected
+        if not self.generated_forms_dir:
+            QMessageBox.warning(self, "Directory Required", "Please select a directory for generated forms first")
+            return
+        
+        # Validate form inputs
+        name = self.name_input.text().strip()
+        onq_user = self.onq_input.text().strip()
+        email = self.email_input.text().strip()
+        
+        if not name or not email:
+            QMessageBox.warning(self, "Validation Error", "Please fill in all required fields (Name, Email)")
+            return
+        
+        dept_index = self.department_combo.currentIndex()
+        pos_index = self.position_combo.currentIndex()
+        
+        if dept_index <= 0 or pos_index <= 0:
+            QMessageBox.warning(self, "Validation Error", "Please select both Department and Position")
+            return
+        
+        dept_data = self.department_combo.itemData(dept_index)
+        pos_data = self.position_combo.itemData(pos_index)
+        
+        if not dept_data or not pos_data:
+            QMessageBox.warning(self, "Validation Error", "Invalid department or position selection")
+            return
+        
+        # Get selected date
+        selected_date = self.date_picker.date().toString("dd-MMM-yy")
+        
+        # Check if this is a new person or existing person
+        person_id = self.person_combo.currentData()
+        
+        if not person_id:
+            # Save new person data
+            person_id = self.save_person_data(name, email)
+            if person_id:
+                # Update the person combobox
+                self.update_person_combo()
+                # Select the newly added person
+                for i in range(self.person_combo.count()):
+                    if self.person_combo.itemData(i) == person_id:
+                        self.person_combo.setCurrentIndex(i)
+                        break
+        
+        # Get position access permissions
+        access_permissions = self.get_position_access(dept_data["id"], pos_data["id"])
+        
+        # Get system categories from database
+        system_categories = self.db_data.get("system_categories", [])
+        
+        # Generate the PDF
+        try:
+            output_path = self.create_departure_pdf(name, onq_user, email, dept_data["name"], pos_data["name"],
+                                                  selected_date, person_id, access_permissions, system_categories)
+            if output_path:
+                QMessageBox.information(self, "Success", f"Departure form generated successfully for {name}\nSaved to: {output_path}")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to generate departure form: {str(e)}")
     
     def create_signin_pdf(self, name, onq_user, email, department, position, date, access_permissions, person_id):
         """Create the sign in form PDF using the template"""
@@ -813,39 +752,30 @@ class FormScreen(QMainWindow):
             return output_path
         return None
     
+    def create_departure_pdf(self, name, onq_user, email, department, position, date, person_id, access_permissions, system_categories):
+        """Create the departure form PDF using the departure template"""
+        # Create the custom departure PDF
+        pdf = SeparationChecklistPDF(orientation='P', unit='mm', format='A4')
+        
+        if pdf:
+            # Create person folder if it doesn't exist
+            person_folder_name = name.replace(' ', '_')
+            person_folder_path = os.path.join(self.generated_forms_dir, person_folder_name)
+            os.makedirs(person_folder_path, exist_ok=True)
+            
+            # Generate unique filename with timestamp
+            timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+            output_filename = f"departure_form_{timestamp}.pdf"
+            output_path = os.path.join(person_folder_path, output_filename)
+            
+            # Generate the checklist with employee data
+            pdf.generate_checklist(name, onq_user, department, position, date, access_permissions, system_categories)
+            
+            # Save the PDF
+            pdf.output(output_path)
+            return output_path
+        return None
     
-    def go_back_to_main(self):
-        """Go back to the main screen"""
-        # Import here to avoid circular import
-        try:
-            from GUI.main_screen import MainScreen
-            self.main_screen = MainScreen()
-            self.main_screen.show()
-            self.close()  # Close the current screen
-        except ImportError as e:
-            QMessageBox.critical(self, "Error", f"Failed to import main screen: {str(e)}")
-    
-    def go_to_departments(self):
-        """Go to the departments and positions screen"""
-        # Import here to avoid circular import
-        try:
-            from GUI.departments_and_positions import DepartmentsAndPositionsScreen
-            self.departments_screen = DepartmentsAndPositionsScreen()
-            self.departments_screen.show()
-            self.close()  # Close the current screen
-        except ImportError as e:
-            QMessageBox.critical(self, "Error", f"Failed to import departments screen: {str(e)}")
-    
-    def go_to_hotel_systems(self):
-        """Go to the hotel systems screen"""
-        # Import here to avoid circular import
-        try:
-            from GUI.hotel_systems import HotelSystemsScreen
-            self.hotel_systems_screen = HotelSystemsScreen()
-            self.hotel_systems_screen.show()
-            self.close()  # Close the current screen
-        except ImportError as e:
-            QMessageBox.critical(self, "Error", f"Failed to import hotel systems screen: {str(e)}")
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
