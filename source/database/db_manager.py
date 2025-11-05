@@ -11,7 +11,7 @@ class DatabaseManager:
         self.firebase_initialized = False
         
         # Initialize Firebase if needed
-        if config.USING_FIREBASE_REALTIME_DB:
+        if config.db_config.is_using_firebase():
             self._initialize_firebase()
     
     def _initialize_firebase(self):
@@ -31,18 +31,23 @@ class DatabaseManager:
                 
                 # Initialize Firebase with service account credentials
                 try:
+                    firebase_config = config.db_config.get_firebase_config()
+                    
                     # Get the path to the service account key
-                    service_account_path = os.path.join(
-                        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-                        config.FIREBASE_SERVICE_ACCOUNT_KEY
-                    )
+                    service_account_path = firebase_config["serviceAccountKey"]
+                    # If path is relative, make it relative to project root
+                    if not os.path.isabs(service_account_path):
+                        service_account_path = os.path.join(
+                            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                            service_account_path
+                        )
                     
                     # Initialize Firebase with service account credentials
                     cred = credentials.Certificate(service_account_path)
                     self.firebase_app = firebase_admin.initialize_app(
                         cred,
                         {
-                            'databaseURL': config.FIREBASE_DATABASE_URL
+                            'databaseURL': firebase_config["databaseURL"]
                         },
                         name='waldorf_db'
                     )
@@ -58,9 +63,9 @@ class DatabaseManager:
     
     def load_database(self):
         """Load database from either local file or Firebase"""
-        if config.USING_LOCAL_DB:
+        if config.db_config.is_using_local():
             return self._load_from_local()
-        elif config.USING_FIREBASE_REALTIME_DB:
+        elif config.db_config.is_using_firebase():
             return self._load_from_firebase()
         else:
             raise ValueError("No database configuration is enabled")
@@ -68,7 +73,11 @@ class DatabaseManager:
     def _load_from_local(self):
         """Load database from local JSON file"""
         try:
-            db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "database.json")
+            db_path = config.db_config.get_local_db_path()
+            # If path is relative, make it relative to project root
+            if not os.path.isabs(db_path):
+                db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), db_path)
+            
             with open(db_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except Exception as e:
@@ -99,9 +108,9 @@ class DatabaseManager:
     
     def save_database(self, data):
         """Save database to either local file or Firebase"""
-        if config.USING_LOCAL_DB:
+        if config.db_config.is_using_local():
             return self._save_to_local(data)
-        elif config.USING_FIREBASE_REALTIME_DB:
+        elif config.db_config.is_using_firebase():
             return self._save_to_firebase(data)
         else:
             raise ValueError("No database configuration is enabled")
@@ -109,7 +118,14 @@ class DatabaseManager:
     def _save_to_local(self, data):
         """Save database to local JSON file"""
         try:
-            db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "database.json")
+            db_path = config.db_config.get_local_db_path()
+            # If path is relative, make it relative to project root
+            if not os.path.isabs(db_path):
+                db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), db_path)
+            
+            # Ensure directory exists
+            os.makedirs(os.path.dirname(db_path), exist_ok=True)
+            
             with open(db_path, 'w', encoding='utf-8') as f:
                 json.dump(data, f, ensure_ascii=False, indent=2)
             return True
@@ -136,7 +152,7 @@ class DatabaseManager:
     
     def sync_to_firebase(self):
         """Sync local database to Firebase"""
-        if config.USING_FIREBASE_REALTIME_DB:
+        if config.db_config.is_using_firebase():
             local_data = self._load_from_local()
             return self._save_to_firebase(local_data)
         else:
@@ -145,12 +161,36 @@ class DatabaseManager:
     
     def sync_from_firebase(self):
         """Sync Firebase database to local"""
-        if config.USING_FIREBASE_REALTIME_DB:
+        if config.db_config.is_using_firebase():
             firebase_data = self._load_from_firebase()
             return self._save_to_local(firebase_data)
         else:
             print("Firebase is not enabled in configuration")
             return False
+    
+    def switch_database(self, db_type: str):
+        """Switch between database types at runtime"""
+        try:
+            if db_type.lower() == "local":
+                config.db_config.switch_to_local()
+                # Reinitialize if needed
+                if self.firebase_initialized:
+                    print("Note: Firebase connection remains active but local database will be used")
+            elif db_type.lower() == "firebase":
+                config.db_config.switch_to_firebase()
+                if not self.firebase_initialized:
+                    self._initialize_firebase()
+            else:
+                print(f"Unknown database type: {db_type}")
+                return False
+            return True
+        except Exception as e:
+            print(f"Error switching database: {str(e)}")
+            return False
+    
+    def get_current_database_type(self) -> str:
+        """Get the current database type"""
+        return config.db_config.database_type.value
 
 # Create a singleton instance
 db_manager = DatabaseManager()

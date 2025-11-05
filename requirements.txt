@@ -3,3 +3,4 @@ Pillow
 PyQt5
 pyinstaller
 firebase-admin
+python-dotenv
