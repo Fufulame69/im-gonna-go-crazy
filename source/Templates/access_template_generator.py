@@ -1,5 +1,18 @@
 import datetime
+import os
+import sys
 from fpdf import FPDF
+
+# Function to get the absolute path to resources, works for both development and PyInstaller
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    
+    return os.path.join(base_path, relative_path)
 
 class PDF(FPDF):
     def __init__(self, *args, **kwargs):
@@ -366,7 +379,7 @@ def create_solicitud_pdf():
     #    or change the font names in PDF.__init__ to a standard font like 'Helvetica'
     # 3. Update this logo_path to point to your actual logo file.
     
-    logo_path = "assets/waldorf_logo.png" # <--- UPDATE THIS PATH
+    logo_path = resource_path("assets/waldorf_logo.png") # <--- UPDATE THIS PATH
     
     # --- Mock data for dynamic sections (from HTML) ---
     # This data would come from your application logic
@@ -423,7 +436,7 @@ def create_solicitud_pdf():
 def create_custom_pdf(name, onq_user, email, department, position, date, access_permissions, system_categories):
     """Create a custom PDF with user-provided data and access permissions."""
     
-    logo_path = "assets/waldorf_logo.png"  # Update this path as needed
+    logo_path = resource_path("assets/waldorf_logo.png")  # Update this path as needed
     
     try:
         # Create PDF object (Letter size, mm units)
