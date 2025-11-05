@@ -1,1029 +1,1034 @@
 {
-    "metadata": {
-        "version": "1.0.0",
-        "last_updated": "2025-11-04",
-        "application_name": "Simplified Access Manager",
-        "description": "Database for managing employee access permissions to company systems"
+  "metadata": {
+    "version": "1.0.0",
+    "last_updated": "2025-11-04",
+    "application_name": "Simplified Access Manager",
+    "description": "Database for managing employee access permissions to company systems"
+  },
+  "users": {
+    "admin": {
+      "username": "admin",
+      "password_hash": "hashed_password_here",
+      "role": "admin",
+      "full_name": "IT Administrator"
     },
-    "users": {
-        "admin": {
-            "username": "admin",
-            "password_hash": "hashed_password_here",
-            "role": "admin",
-            "full_name": "IT Administrator"
-        },
-        "viewer": {
-            "username": "viewer",
-            "password_hash": "hashed_password_here",
-            "role": "viewer",
-            "full_name": "Department Manager"
-        }
-    },
-    "departments": [
-        {
-            "id": "gerencia",
-            "name": "Gerencia",
-            "positions": [
-                {
-                    "id": "gerente_general",
-                    "name": "Gerente General"
-                },
-                {
-                    "id": "asistente_gerente_general",
-                    "name": "Asistente a Gerente General"
-                }
-            ]
-        },
-        {
-            "id": "finanzas",
-            "name": "Finanzas",
-            "positions": [
-                {
-                    "id": "sub_director_financiero",
-                    "name": "Sub-Director Financiero"
-                },
-                {
-                    "id": "analista_cuentas_cobrar",
-                    "name": "Analista de Cuentas por Cobrar"
-                },
-                {
-                    "id": "auditor_interno_taxes",
-                    "name": "Auditor Interno - Taxes"
-                },
-                {
-                    "id": "coordinador_cuentas_pagar",
-                    "name": "Coordinador de Cuentas por Pagar"
-                },
-                {
-                    "id": "coordinador_nomina",
-                    "name": "Coordinador de Nómina"
-                },
-                {
-                    "id": "cajero_general",
-                    "name": "Cajero General"
-                },
-                {
-                    "id": "jefe_compras",
-                    "name": "Jefe de Compras"
-                },
-                {
-                    "id": "analista_contable",
-                    "name": "Analista Contable"
-                },
-                {
-                    "id": "jefe_costos",
-                    "name": "Jefe de Costos"
-                },
-                {
-                    "id": "recibidor_mercancia",
-                    "name": "Recibidor de Mercancía"
-                },
-                {
-                    "id": "coordinador_almacen",
-                    "name": "Coordinador de Almacén"
-                },
-                {
-                    "id": "gerente_compras",
-                    "name": "Gerente de Compras"
-                },
-                {
-                    "id": "asistente_compras",
-                    "name": "Asistente de Compras"
-                },
-                {
-                    "id": "coordinador_compras",
-                    "name": "Coordinador de Compras"
-                },
-                {
-                    "id": "auxiliar_almacen",
-                    "name": "Auxiliar de Almacén"
-                }
-            ]
-        },
-        {
-            "id": "cuartos",
-            "name": "Cuartos",
-            "positions": [
-                {
-                    "id": "director_cuartos",
-                    "name": "Director Cuartos"
-                },
-                {
-                    "id": "gerente_front_desk",
-                    "name": "Gerente Front Desk"
-                },
-                {
-                    "id": "supervisor_recepcion",
-                    "name": "Supervisor de Recepción"
-                },
-                {
-                    "id": "recepcionista",
-                    "name": "Recepcionista"
-                },
-                {
-                    "id": "guest_ambassador",
-                    "name": "Guest Ambassador"
-                },
-                {
-                    "id": "conserje",
-                    "name": "Conserje"
-                },
-                {
-                    "id": "botones",
-                    "name": "Botones"
-                },
-                {
-                    "id": "bell_boy",
-                    "name": "Bell Boy"
-                },
-                {
-                    "id": "supervisora_pbx",
-                    "name": "Supervisora PBX"
-                },
-                {
-                    "id": "operador_telefonos",
-                    "name": "Operador Teléfonos"
-                }
-            ]
-        },
-        {
-            "id": "housekeeping",
-            "name": "Housekeeping",
-            "positions": [
-                {
-                    "id": "directora_ama_llaves",
-                    "name": "Directora Ama de Llaves"
-                },
-                {
-                    "id": "asistente_ama_llaves",
-                    "name": "Asistente Ama de Llaves"
-                },
-                {
-                    "id": "supervisor_habitaciones",
-                    "name": "Supervisor de Habitaciones"
-                },
-                {
-                    "id": "auxiliar_areas_publicas",
-                    "name": "Auxiliar de Areas Publicas"
-                },
-                {
-                    "id": "houseman_habitaciones",
-                    "name": "Houseman de Habitaciones"
-                },
-                {
-                    "id": "encargada_lavanderia",
-                    "name": "Encargada de Lavandería"
-                },
-                {
-                    "id": "operador_lavanderia",
-                    "name": "Operador de Lavandería"
-                },
-                {
-                    "id": "gerente_salavidas_business_center",
-                    "name": "Gerente Salavidas & Business Center"
-                }
-            ]
-        },
-        {
-            "id": "revenue",
-            "name": "Revenue",
-            "positions": [
-                {
-                    "id": "director_revenue",
-                    "name": "Director Revenue"
-                },
-                {
-                    "id": "gerente_reservas",
-                    "name": "Gerente de Reservas"
-                },
-                {
-                    "id": "supervisora_reservas",
-                    "name": "Supervisora de Reservas"
-                },
-                {
-                    "id": "agente_reservaciones",
-                    "name": "Agente de Reservaciones"
-                }
-            ]
-        },
-        {
-            "id": "ventas",
-            "name": "Ventas",
-            "positions": [
-                {
-                    "id": "director_ventas",
-                    "name": "Director de Ventas"
-                },
-                {
-                    "id": "subdirectora_ventas",
-                    "name": "Subdirectora de Ventas"
-                },
-                {
-                    "id": "asistente_ventas",
-                    "name": "Asistente de Ventas"
-                },
-                {
-                    "id": "gerentes_ventas",
-                    "name": "Gerentes de Ventas"
-                },
-                {
-                    "id": "gerente_cuentas_catering",
-                    "name": "Gerente de Cuentas y Catering"
-                },
-                {
-                    "id": "coordinador_ventas_catering",
-                    "name": "Coordinador de Ventas y Catering"
-                },
-                {
-                    "id": "pasante_ventas",
-                    "name": "Pasante de Ventas"
-                }
-            ]
-        },
-        {
-            "id": "ab",
-            "name": "A&B",
-            "positions": [
-                {
-                    "id": "director_ab",
-                    "name": "Director A&B"
-                },
-                {
-                    "id": "asistente_ab",
-                    "name": "Asistente A&B"
-                },
-                {
-                    "id": "gerente_banquetes",
-                    "name": "Gerente de Banquetes"
-                },
-                {
-                    "id": "coordinador_eventos_banquetes",
-                    "name": "Coordinador de Eventos y Banquetes"
-                },
-                {
-                    "id": "capitan_banquetes",
-                    "name": "Capitan de Banquetes"
-                },
-                {
-                    "id": "steward",
-                    "name": "Steward"
-                },
-                {
-                    "id": "mesero_banquetes",
-                    "name": "Mesero de Banquetes"
-                },
-                {
-                    "id": "montador",
-                    "name": "Montador"
-                },
-                {
-                    "id": "jefe_restaurante_bar",
-                    "name": "Jefe de Restaurante y Bar"
-                },
-                {
-                    "id": "capitan_restaurantes",
-                    "name": "Capitan de Restaurantes"
-                },
-                {
-                    "id": "capitan_outlets",
-                    "name": "Capitan de Outlets"
-                },
-                {
-                    "id": "hostess",
-                    "name": "Hostess"
-                },
-                {
-                    "id": "mesero",
-                    "name": "Mesero"
-                },
-                {
-                    "id": "bartender",
-                    "name": "Bartender"
-                },
-                {
-                    "id": "minibar",
-                    "name": "Minibar"
-                },
-                {
-                    "id": "supervisor_room_service",
-                    "name": "Supervisor Room Service"
-                },
-                {
-                    "id": "agente_servicio_habitacion",
-                    "name": "Agente de Servicio a la Habitación"
-                },
-                {
-                    "id": "mesero_executive_lounge",
-                    "name": "Mesero Executive Lounge"
-                }
-            ]
-        },
-        {
-            "id": "cocina",
-            "name": "Cocina",
-            "positions": [
-                {
-                    "id": "chef_ejecutivo",
-                    "name": "Chef Ejecutivo"
-                },
-                {
-                    "id": "coordinador_bpm_calidad",
-                    "name": "Coordinador de BPM y Calidad"
-                },
-                {
-                    "id": "sub_chef_ejecutivo",
-                    "name": "Sub Chef Ejecutivo"
-                },
-                {
-                    "id": "chef_restaurante",
-                    "name": "Chef Restaurante"
-                },
-                {
-                    "id": "chef_garde",
-                    "name": "Chef Garde"
-                },
-                {
-                    "id": "chef_banquete",
-                    "name": "Chef Banquete"
-                },
-                {
-                    "id": "chef_de_partie_restaurante",
-                    "name": "Chef De Partie Restaurante"
-                },
-                {
-                    "id": "chef_de_partie_banquetes",
-                    "name": "Chef De Partie Banquetes"
-                },
-                {
-                    "id": "chef_de_partie_pasteleria",
-                    "name": "Chef De Partie Pasteleria"
-                },
-                {
-                    "id": "chef_de_partie_produccion",
-                    "name": "Chef De Partie Produccion"
-                },
-                {
-                    "id": "chef_de_partie_pizzaiolo",
-                    "name": "Chef De Partie Pizzaiolo"
-                },
-                {
-                    "id": "pastelero",
-                    "name": "Pastelero"
-                },
-                {
-                    "id": "cocinero_i",
-                    "name": "Cocinero I"
-                },
-                {
-                    "id": "cocinero_ii",
-                    "name": "Cocinero II"
-                },
-                {
-                    "id": "cocinero_iii_restaurant",
-                    "name": "Cocinero III Restaurant"
-                },
-                {
-                    "id": "stall_steward",
-                    "name": "Stall Steward"
-                },
-                {
-                    "id": "supervisor_steward",
-                    "name": "Supervisor Steward"
-                }
-            ]
-        },
-        {
-            "id": "recursos_humanos",
-            "name": "Recursos Humanos",
-            "positions": [
-                {
-                    "id": "directora_rh",
-                    "name": "Directora RH"
-                },
-                {
-                    "id": "coordinador_recursos_humanos",
-                    "name": "Coordinador de Recursos Humanos"
-                },
-                {
-                    "id": "coordinador_reclutamiento",
-                    "name": "Coordinador Reclutamiento"
-                },
-                {
-                    "id": "coordinador_sgcst_trissed",
-                    "name": "Coordinador SGCST-TRISSED"
-                },
-                {
-                    "id": "seguridad_recursos_humanos",
-                    "name": "Seguridad Recursos Humanos"
-                },
-                {
-                    "id": "supervisor_control_perdidas",
-                    "name": "Supervisor de Control de Perdidas"
-                }
-            ]
-        },
-        {
-            "id": "seguridad",
-            "name": "Seguridad",
-            "positions": []
-        },
-        {
-            "id": "mantenimiento",
-            "name": "Mantenimiento",
-            "positions": [
-                {
-                    "id": "director_mantenimiento",
-                    "name": "Director de Mantenimiento"
-                },
-                {
-                    "id": "asistente_gerencia_mantenimiento",
-                    "name": "Asistente Gerencia de Mantenimiento"
-                },
-                {
-                    "id": "supervisor_mantenimiento",
-                    "name": "Supervisor de Mantenimiento"
-                },
-                {
-                    "id": "tecnico_mantenimiento",
-                    "name": "Tecnico Mantenimiento"
-                },
-                {
-                    "id": "tecnico_electromecanico",
-                    "name": "Tecnico Electromecanico"
-                },
-                {
-                    "id": "tecnico_ac_refrigeracion",
-                    "name": "Tecnico AC Refrigeracion"
-                }
-            ]
-        },
-        {
-            "id": "sistemas",
-            "name": "Sistemas",
-            "positions": [
-                {
-                    "id": "gerente_sistemas",
-                    "name": "Gerente de Sistemas"
-                },
-                {
-                    "id": "asistente_sistemas",
-                    "name": "Asistente de Sistemas"
-                }
-            ]
-        }
-    ],
-    "system_categories": [
-        {
-            "id": "onq",
-            "name": "OnQ",
-            "systems": [
-                {
-                    "id": "onq_user",
-                    "name": "OnQ User"
-                },
-                {
-                    "id": "onq_admin",
-                    "name": "OnQ Admin"
-                },
-                {
-                    "id": "onq_ri",
-                    "name": "OnQ R&I"
-                },
-                {
-                    "id": "onq_rm",
-                    "name": "OnQ R&M"
-                }
-            ]
-        },
-        {
-            "id": "opera_pms",
-            "name": "Opera PMS",
-            "systems": [
-                {
-                    "id": "finance_manager",
-                    "name": "Finance Manager"
-                },
-                {
-                    "id": "security",
-                    "name": "Security"
-                },
-                {
-                    "id": "finance_supervisor",
-                    "name": "Finance Supervisor"
-                },
-                {
-                    "id": "ar_manager",
-                    "name": "A/R Manager"
-                },
-                {
-                    "id": "income_auditor",
-                    "name": "Income Auditor"
-                },
-                {
-                    "id": "ar_clerk",
-                    "name": "A/R Clerk"
-                },
-                {
-                    "id": "fo_manager",
-                    "name": "FO Manager"
-                },
-                {
-                    "id": "night_auditor",
-                    "name": "Night Auditor"
-                },
-                {
-                    "id": "night_manager",
-                    "name": "Night Manager"
-                },
-                {
-                    "id": "fd_supervisor",
-                    "name": "FD Supervisor"
-                },
-                {
-                    "id": "fd_agent",
-                    "name": "FD Agent"
-                },
-                {
-                    "id": "concierge",
-                    "name": "Concierge"
-                },
-                {
-                    "id": "bell_man",
-                    "name": "Bell Man"
-                },
-                {
-                    "id": "executive_housekeeper",
-                    "name": "Executive Housekeeper"
-                },
-                {
-                    "id": "housekeeping_supervisor",
-                    "name": "Housekeeping Supervisor"
-                },
-                {
-                    "id": "housekeeping_attend",
-                    "name": "Housekeeping Attend"
-                },
-                {
-                    "id": "revenue_manager",
-                    "name": "Revenue Manager"
-                },
-                {
-                    "id": "reservation_supervisor",
-                    "name": "Reservation Supervisor"
-                },
-                {
-                    "id": "reservation_agent",
-                    "name": "Reservation Agent"
-                },
-                {
-                    "id": "groups_ce_manager",
-                    "name": "Groups & CE Manager"
-                },
-                {
-                    "id": "sales_manager",
-                    "name": "Sales Manager"
-                },
-                {
-                    "id": "sales",
-                    "name": "Sales"
-                },
-                {
-                    "id": "telephone_supervisor",
-                    "name": "Telephone Supervisor"
-                },
-                {
-                    "id": "telephone_operator",
-                    "name": "Telephone Operator"
-                },
-                {
-                    "id": "ism",
-                    "name": "ISM"
-                },
-                {
-                    "id": "property_expert",
-                    "name": "Property Expert"
-                },
-                {
-                    "id": "opera_supervisor",
-                    "name": "Opera Supervisor"
-                },
-                {
-                    "id": "general_manager",
-                    "name": "General Manager"
-                },
-                {
-                    "id": "director_of_finance",
-                    "name": "Director of Finance"
-                },
-                {
-                    "id": "accounts_payable",
-                    "name": "Accounts Payable"
-                },
-                {
-                    "id": "dir_of_pur",
-                    "name": "Dir Of Pur"
-                },
-                {
-                    "id": "storeroom_receiver",
-                    "name": "Storeroom/Receiver"
-                },
-                {
-                    "id": "po_req_selectdepts",
-                    "name": "PO/REQ/SelectDepts"
-                },
-                {
-                    "id": "po_aprv_req_selectdepts",
-                    "name": "PO/APRV/REQ/SelectDepts"
-                },
-                {
-                    "id": "it_manager",
-                    "name": "IT Manager"
-                },
-                {
-                    "id": "po_req_selectdepts_recv_aprv",
-                    "name": "PO/REQ/SelectDepts/Recv/APRV"
-                },
-                {
-                    "id": "cost_controller_accounts_payable",
-                    "name": "Cost Controller/ Accounts Payable"
-                }
-            ]
-        },
-        {
-            "id": "birch_street",
-            "name": "Birch Street",
-            "systems": [
-                {
-                    "id": "11102_0",
-                    "name": "11102.0"
-                },
-                {
-                    "id": "11121_0",
-                    "name": "11121.0"
-                },
-                {
-                    "id": "11130_0",
-                    "name": "11130.0"
-                },
-                {
-                    "id": "11160_0",
-                    "name": "11160.0"
-                },
-                {
-                    "id": "11171_0",
-                    "name": "11171.0"
-                },
-                {
-                    "id": "11725_0",
-                    "name": "11725.0"
-                },
-                {
-                    "id": "11720_0",
-                    "name": "11720.0"
-                },
-                {
-                    "id": "11700_0",
-                    "name": "11700.0"
-                },
-                {
-                    "id": "11730_0",
-                    "name": "11730.0"
-                },
-                {
-                    "id": "11735_0",
-                    "name": "11735.0"
-                },
-                {
-                    "id": "11745_0",
-                    "name": "11745.0"
-                },
-                {
-                    "id": "11731_0",
-                    "name": "11731.0"
-                },
-                {
-                    "id": "11705_0",
-                    "name": "11705.0"
-                }
-            ]
-        },
-        {
-            "id": "nomina_control_tiempo",
-            "name": "Nomina & control de tiempo",
-            "systems": [
-                {
-                    "id": "administrador_monolith",
-                    "name": "Administrador Monolith"
-                },
-                {
-                    "id": "gerente_reg_acciones",
-                    "name": "Gerente Reg Acciones"
-                },
-                {
-                    "id": "gerente_reloj_marcador",
-                    "name": "Gerente reloj marcador"
-                },
-                {
-                    "id": "emc",
-                    "name": "EMC"
-                }
-            ]
-        },
-        {
-            "id": "simphony",
-            "name": "Simphony",
-            "systems": [
-                {
-                    "id": "reporting_analytics",
-                    "name": "Reporting and Analytics"
-                },
-                {
-                    "id": "tarjeta_pos",
-                    "name": "Tarjeta POS"
-                },
-                {
-                    "id": "server",
-                    "name": "Server"
-                },
-                {
-                    "id": "bartender_simphony",
-                    "name": "Bartender"
-                },
-                {
-                    "id": "in_room_dining",
-                    "name": "In Room Dining"
-                },
-                {
-                    "id": "cashier",
-                    "name": "Cashier"
-                },
-                {
-                    "id": "cashier_discount",
-                    "name": "Cashier/ Discount"
-                },
-                {
-                    "id": "supervisor_simphony",
-                    "name": "Supervisor"
-                },
-                {
-                    "id": "manager_simphony",
-                    "name": "Manager"
-                }
-            ]
-        },
-        {
-            "id": "finanzas",
-            "name": "Finanzas",
-            "systems": [
-                {
-                    "id": "sun",
-                    "name": "SUN"
-                },
-                {
-                    "id": "bmqa",
-                    "name": "BMQA"
-                },
-                {
-                    "id": "operations_audit",
-                    "name": "Operations Audit"
-                },
-                {
-                    "id": "datalink",
-                    "name": "DataLink"
-                },
-                {
-                    "id": "blackline",
-                    "name": "Blackline"
-                },
-                {
-                    "id": "proplan",
-                    "name": "PROPLAN"
-                },
-                {
-                    "id": "fms",
-                    "name": "FMS"
-                }
-            ]
-        },
-        {
-            "id": "fac_elec",
-            "name": "Fac. Elec.",
-            "systems": [
-                {
-                    "id": "bms",
-                    "name": "BMS"
-                },
-                {
-                    "id": "zennio",
-                    "name": "ZENNIO"
-                }
-            ]
-        },
-        {
-            "id": "miscelaneos_delphi",
-            "name": "Miscelaneos y delphi",
-            "systems": [
-                {
-                    "id": "pressreader",
-                    "name": "PRESSREADER"
-                },
-                {
-                    "id": "sertify",
-                    "name": "SERTIFY"
-                },
-                {
-                    "id": "book4time",
-                    "name": "BOOK4TIME"
-                },
-                {
-                    "id": "opentable",
-                    "name": "OPENTABLE"
-                },
-                {
-                    "id": "vision_line",
-                    "name": "VISION LINE"
-                },
-                {
-                    "id": "op_audi",
-                    "name": "OP AUDI"
-                },
-                {
-                    "id": "reports",
-                    "name": "Reports"
-                },
-                {
-                    "id": "cloudflare",
-                    "name": "Cloudflare"
-                },
-                {
-                    "id": "sinergy_mms",
-                    "name": "Sinergy MMS"
-                },
-                {
-                    "id": "vantage",
-                    "name": "Vantage"
-                },
-                {
-                    "id": "delphi",
-                    "name": "Delphi"
-                }
-            ]
-        },
-        {
-            "id": "grupos",
-            "name": "Grupos",
-            "systems": [
-                {
-                    "id": "eng",
-                    "name": "ENG"
-                },
-                {
-                    "id": "sox",
-                    "name": "SOX"
-                },
-                {
-                    "id": "pr",
-                    "name": "PR"
-                },
-                {
-                    "id": "hc",
-                    "name": "HC"
-                },
-                {
-                    "id": "oa",
-                    "name": "OA"
-                },
-                {
-                    "id": "cb",
-                    "name": "CB"
-                },
-                {
-                    "id": "fb",
-                    "name": "FB"
-                },
-                {
-                    "id": "fc",
-                    "name": "FC"
-                },
-                {
-                    "id": "fo",
-                    "name": "FO"
-                },
-                {
-                    "id": "gm",
-                    "name": "GM"
-                },
-                {
-                    "id": "hrd",
-                    "name": "HRD"
-                },
-                {
-                    "id": "hsk",
-                    "name": "HSK"
-                },
-                {
-                    "id": "ism_grupos",
-                    "name": "ISM"
-                },
-                {
-                    "id": "kit",
-                    "name": "KIT"
-                },
-                {
-                    "id": "mkt",
-                    "name": "MKT"
-                },
-                {
-                    "id": "pur",
-                    "name": "PUR"
-                },
-                {
-                    "id": "res",
-                    "name": "RES"
-                },
-                {
-                    "id": "sal",
-                    "name": "SAL"
-                },
-                {
-                    "id": "sec",
-                    "name": "SEC"
-                },
-                {
-                    "id": "hod",
-                    "name": "HOD"
-                }
-            ]
-        },
-        {
-            "id": "email",
-            "name": "Email",
-            "systems": [
-                {
-                    "id": "email",
-                    "name": "eMail"
-                },
-                {
-                    "id": "email_mobile",
-                    "name": "eMail Mobile"
-                }
-            ]
-        },
-        {
-            "id": "other_systems",
-            "name": "Other Systems",
-            "systems": [
-                {
-                    "id": "avero",
-                    "name": "Avero"
-                },
-                {
-                    "id": "synergymms",
-                    "name": "Synergymms"
-                },
-                {
-                    "id": "kualtrix",
-                    "name": "KUALTRIX"
-                },
-                {
-                    "id": "trayaway",
-                    "name": "TRAYAWAY"
-                },
-                {
-                    "id": "kypsu",
-                    "name": "KYPSU"
-                },
-                {
-                    "id": "wiq",
-                    "name": "WIQ"
-                },
-                {
-                    "id": "alice",
-                    "name": "ALICE"
-                },
-                {
-                    "id": "adobe",
-                    "name": "ADOBE"
-                },
-                {
-                    "id": "foxit",
-                    "name": "FOXIT"
-                },
-                {
-                    "id": "owner_rlt",
-                    "name": "OWNER RLT"
-                }
-            ]
-        }
-    ],
-    "access_permissions": {
-        "gerencia": {
-            "gerente_general": {
-                "onq": {
-                    "onq_user": true,
-                    "onq_ri": true
-                }
-            }
-        }
+    "viewer": {
+      "username": "viewer",
+      "password_hash": "hashed_password_here",
+      "role": "viewer",
+      "full_name": "Department Manager"
     }
+  },
+  "departments": [
+    {
+      "id": "gerencia",
+      "name": "Gerencia",
+      "positions": [
+        {
+          "id": "gerente_general",
+          "name": "Gerente General"
+        },
+        {
+          "id": "asistente_gerente_general",
+          "name": "Asistente a Gerente General"
+        }
+      ]
+    },
+    {
+      "id": "finanzas",
+      "name": "Finanzas",
+      "positions": [
+        {
+          "id": "sub_director_financiero",
+          "name": "Sub-Director Financiero"
+        },
+        {
+          "id": "analista_cuentas_cobrar",
+          "name": "Analista de Cuentas por Cobrar"
+        },
+        {
+          "id": "auditor_interno_taxes",
+          "name": "Auditor Interno - Taxes"
+        },
+        {
+          "id": "coordinador_cuentas_pagar",
+          "name": "Coordinador de Cuentas por Pagar"
+        },
+        {
+          "id": "coordinador_nomina",
+          "name": "Coordinador de Nómina"
+        },
+        {
+          "id": "cajero_general",
+          "name": "Cajero General"
+        },
+        {
+          "id": "jefe_compras",
+          "name": "Jefe de Compras"
+        },
+        {
+          "id": "analista_contable",
+          "name": "Analista Contable"
+        },
+        {
+          "id": "jefe_costos",
+          "name": "Jefe de Costos"
+        },
+        {
+          "id": "recibidor_mercancia",
+          "name": "Recibidor de Mercancía"
+        },
+        {
+          "id": "coordinador_almacen",
+          "name": "Coordinador de Almacén"
+        },
+        {
+          "id": "gerente_compras",
+          "name": "Gerente de Compras"
+        },
+        {
+          "id": "asistente_compras",
+          "name": "Asistente de Compras"
+        },
+        {
+          "id": "coordinador_compras",
+          "name": "Coordinador de Compras"
+        },
+        {
+          "id": "auxiliar_almacen",
+          "name": "Auxiliar de Almacén"
+        }
+      ]
+    },
+    {
+      "id": "cuartos",
+      "name": "Cuartos",
+      "positions": [
+        {
+          "id": "director_cuartos",
+          "name": "Director Cuartos"
+        },
+        {
+          "id": "gerente_front_desk",
+          "name": "Gerente Front Desk"
+        },
+        {
+          "id": "supervisor_recepcion",
+          "name": "Supervisor de Recepción"
+        },
+        {
+          "id": "recepcionista",
+          "name": "Recepcionista"
+        },
+        {
+          "id": "guest_ambassador",
+          "name": "Guest Ambassador"
+        },
+        {
+          "id": "conserje",
+          "name": "Conserje"
+        },
+        {
+          "id": "botones",
+          "name": "Botones"
+        },
+        {
+          "id": "bell_boy",
+          "name": "Bell Boy"
+        },
+        {
+          "id": "supervisora_pbx",
+          "name": "Supervisora PBX"
+        },
+        {
+          "id": "operador_telefonos",
+          "name": "Operador Teléfonos"
+        }
+      ]
+    },
+    {
+      "id": "housekeeping",
+      "name": "Housekeeping",
+      "positions": [
+        {
+          "id": "directora_ama_llaves",
+          "name": "Directora Ama de Llaves"
+        },
+        {
+          "id": "asistente_ama_llaves",
+          "name": "Asistente Ama de Llaves"
+        },
+        {
+          "id": "supervisor_habitaciones",
+          "name": "Supervisor de Habitaciones"
+        },
+        {
+          "id": "auxiliar_areas_publicas",
+          "name": "Auxiliar de Areas Publicas"
+        },
+        {
+          "id": "houseman_habitaciones",
+          "name": "Houseman de Habitaciones"
+        },
+        {
+          "id": "encargada_lavanderia",
+          "name": "Encargada de Lavandería"
+        },
+        {
+          "id": "operador_lavanderia",
+          "name": "Operador de Lavandería"
+        },
+        {
+          "id": "gerente_salavidas_business_center",
+          "name": "Gerente Salavidas & Business Center"
+        }
+      ]
+    },
+    {
+      "id": "revenue",
+      "name": "Revenue",
+      "positions": [
+        {
+          "id": "director_revenue",
+          "name": "Director Revenue"
+        },
+        {
+          "id": "gerente_reservas",
+          "name": "Gerente de Reservas"
+        },
+        {
+          "id": "supervisora_reservas",
+          "name": "Supervisora de Reservas"
+        },
+        {
+          "id": "agente_reservaciones",
+          "name": "Agente de Reservaciones"
+        }
+      ]
+    },
+    {
+      "id": "ventas",
+      "name": "Ventas",
+      "positions": [
+        {
+          "id": "director_ventas",
+          "name": "Director de Ventas"
+        },
+        {
+          "id": "subdirectora_ventas",
+          "name": "Subdirectora de Ventas"
+        },
+        {
+          "id": "asistente_ventas",
+          "name": "Asistente de Ventas"
+        },
+        {
+          "id": "gerentes_ventas",
+          "name": "Gerentes de Ventas"
+        },
+        {
+          "id": "gerente_cuentas_catering",
+          "name": "Gerente de Cuentas y Catering"
+        },
+        {
+          "id": "coordinador_ventas_catering",
+          "name": "Coordinador de Ventas y Catering"
+        },
+        {
+          "id": "pasante_ventas",
+          "name": "Pasante de Ventas"
+        }
+      ]
+    },
+    {
+      "id": "ab",
+      "name": "A&B",
+      "positions": [
+        {
+          "id": "director_ab",
+          "name": "Director A&B"
+        },
+        {
+          "id": "asistente_ab",
+          "name": "Asistente A&B"
+        },
+        {
+          "id": "gerente_banquetes",
+          "name": "Gerente de Banquetes"
+        },
+        {
+          "id": "coordinador_eventos_banquetes",
+          "name": "Coordinador de Eventos y Banquetes"
+        },
+        {
+          "id": "capitan_banquetes",
+          "name": "Capitan de Banquetes"
+        },
+        {
+          "id": "steward",
+          "name": "Steward"
+        },
+        {
+          "id": "mesero_banquetes",
+          "name": "Mesero de Banquetes"
+        },
+        {
+          "id": "montador",
+          "name": "Montador"
+        },
+        {
+          "id": "jefe_restaurante_bar",
+          "name": "Jefe de Restaurante y Bar"
+        },
+        {
+          "id": "capitan_restaurantes",
+          "name": "Capitan de Restaurantes"
+        },
+        {
+          "id": "capitan_outlets",
+          "name": "Capitan de Outlets"
+        },
+        {
+          "id": "hostess",
+          "name": "Hostess"
+        },
+        {
+          "id": "mesero",
+          "name": "Mesero"
+        },
+        {
+          "id": "bartender",
+          "name": "Bartender"
+        },
+        {
+          "id": "minibar",
+          "name": "Minibar"
+        },
+        {
+          "id": "supervisor_room_service",
+          "name": "Supervisor Room Service"
+        },
+        {
+          "id": "agente_servicio_habitacion",
+          "name": "Agente de Servicio a la Habitación"
+        },
+        {
+          "id": "mesero_executive_lounge",
+          "name": "Mesero Executive Lounge"
+        }
+      ]
+    },
+    {
+      "id": "cocina",
+      "name": "Cocina",
+      "positions": [
+        {
+          "id": "chef_ejecutivo",
+          "name": "Chef Ejecutivo"
+        },
+        {
+          "id": "coordinador_bpm_calidad",
+          "name": "Coordinador de BPM y Calidad"
+        },
+        {
+          "id": "sub_chef_ejecutivo",
+          "name": "Sub Chef Ejecutivo"
+        },
+        {
+          "id": "chef_restaurante",
+          "name": "Chef Restaurante"
+        },
+        {
+          "id": "chef_garde",
+          "name": "Chef Garde"
+        },
+        {
+          "id": "chef_banquete",
+          "name": "Chef Banquete"
+        },
+        {
+          "id": "chef_de_partie_restaurante",
+          "name": "Chef De Partie Restaurante"
+        },
+        {
+          "id": "chef_de_partie_banquetes",
+          "name": "Chef De Partie Banquetes"
+        },
+        {
+          "id": "chef_de_partie_pasteleria",
+          "name": "Chef De Partie Pasteleria"
+        },
+        {
+          "id": "chef_de_partie_produccion",
+          "name": "Chef De Partie Produccion"
+        },
+        {
+          "id": "chef_de_partie_pizzaiolo",
+          "name": "Chef De Partie Pizzaiolo"
+        },
+        {
+          "id": "pastelero",
+          "name": "Pastelero"
+        },
+        {
+          "id": "cocinero_i",
+          "name": "Cocinero I"
+        },
+        {
+          "id": "cocinero_ii",
+          "name": "Cocinero II"
+        },
+        {
+          "id": "cocinero_iii_restaurant",
+          "name": "Cocinero III Restaurant"
+        },
+        {
+          "id": "stall_steward",
+          "name": "Stall Steward"
+        },
+        {
+          "id": "supervisor_steward",
+          "name": "Supervisor Steward"
+        }
+      ]
+    },
+    {
+      "id": "recursos_humanos",
+      "name": "Recursos Humanos",
+      "positions": [
+        {
+          "id": "directora_rh",
+          "name": "Directora RH"
+        },
+        {
+          "id": "coordinador_recursos_humanos",
+          "name": "Coordinador de Recursos Humanos"
+        },
+        {
+          "id": "coordinador_reclutamiento",
+          "name": "Coordinador Reclutamiento"
+        },
+        {
+          "id": "coordinador_sgcst_trissed",
+          "name": "Coordinador SGCST-TRISSED"
+        },
+        {
+          "id": "seguridad_recursos_humanos",
+          "name": "Seguridad Recursos Humanos"
+        },
+        {
+          "id": "supervisor_control_perdidas",
+          "name": "Supervisor de Control de Perdidas"
+        }
+      ]
+    },
+    {
+      "id": "seguridad",
+      "name": "Seguridad",
+      "positions": []
+    },
+    {
+      "id": "mantenimiento",
+      "name": "Mantenimiento",
+      "positions": [
+        {
+          "id": "director_mantenimiento",
+          "name": "Director de Mantenimiento"
+        },
+        {
+          "id": "asistente_gerencia_mantenimiento",
+          "name": "Asistente Gerencia de Mantenimiento"
+        },
+        {
+          "id": "supervisor_mantenimiento",
+          "name": "Supervisor de Mantenimiento"
+        },
+        {
+          "id": "tecnico_mantenimiento",
+          "name": "Tecnico Mantenimiento"
+        },
+        {
+          "id": "tecnico_electromecanico",
+          "name": "Tecnico Electromecanico"
+        },
+        {
+          "id": "tecnico_ac_refrigeracion",
+          "name": "Tecnico AC Refrigeracion"
+        }
+      ]
+    },
+    {
+      "id": "sistemas",
+      "name": "Sistemas",
+      "positions": [
+        {
+          "id": "gerente_sistemas",
+          "name": "Gerente de Sistemas"
+        },
+        {
+          "id": "asistente_sistemas",
+          "name": "Asistente de Sistemas"
+        }
+      ]
+    }
+  ],
+  "system_categories": [
+    {
+      "id": "onq",
+      "name": "OnQ",
+      "systems": [
+        {
+          "id": "onq_user",
+          "name": "OnQ User"
+        },
+        {
+          "id": "onq_admin",
+          "name": "OnQ Admin"
+        },
+        {
+          "id": "onq_ri",
+          "name": "OnQ R&I"
+        },
+        {
+          "id": "onq_rm",
+          "name": "OnQ R&M"
+        }
+      ]
+    },
+    {
+      "id": "opera_pms",
+      "name": "Opera PMS",
+      "systems": [
+        {
+          "id": "finance_manager",
+          "name": "Finance Manager"
+        },
+        {
+          "id": "security",
+          "name": "Security"
+        },
+        {
+          "id": "finance_supervisor",
+          "name": "Finance Supervisor"
+        },
+        {
+          "id": "ar_manager",
+          "name": "A/R Manager"
+        },
+        {
+          "id": "income_auditor",
+          "name": "Income Auditor"
+        },
+        {
+          "id": "ar_clerk",
+          "name": "A/R Clerk"
+        },
+        {
+          "id": "fo_manager",
+          "name": "FO Manager"
+        },
+        {
+          "id": "night_auditor",
+          "name": "Night Auditor"
+        },
+        {
+          "id": "night_manager",
+          "name": "Night Manager"
+        },
+        {
+          "id": "fd_supervisor",
+          "name": "FD Supervisor"
+        },
+        {
+          "id": "fd_agent",
+          "name": "FD Agent"
+        },
+        {
+          "id": "concierge",
+          "name": "Concierge"
+        },
+        {
+          "id": "bell_man",
+          "name": "Bell Man"
+        },
+        {
+          "id": "executive_housekeeper",
+          "name": "Executive Housekeeper"
+        },
+        {
+          "id": "housekeeping_supervisor",
+          "name": "Housekeeping Supervisor"
+        },
+        {
+          "id": "housekeeping_attend",
+          "name": "Housekeeping Attend"
+        },
+        {
+          "id": "revenue_manager",
+          "name": "Revenue Manager"
+        },
+        {
+          "id": "reservation_supervisor",
+          "name": "Reservation Supervisor"
+        },
+        {
+          "id": "reservation_agent",
+          "name": "Reservation Agent"
+        },
+        {
+          "id": "groups_ce_manager",
+          "name": "Groups & CE Manager"
+        },
+        {
+          "id": "sales_manager",
+          "name": "Sales Manager"
+        },
+        {
+          "id": "sales",
+          "name": "Sales"
+        },
+        {
+          "id": "telephone_supervisor",
+          "name": "Telephone Supervisor"
+        },
+        {
+          "id": "telephone_operator",
+          "name": "Telephone Operator"
+        },
+        {
+          "id": "ism",
+          "name": "ISM"
+        },
+        {
+          "id": "property_expert",
+          "name": "Property Expert"
+        },
+        {
+          "id": "opera_supervisor",
+          "name": "Opera Supervisor"
+        },
+        {
+          "id": "general_manager",
+          "name": "General Manager"
+        },
+        {
+          "id": "director_of_finance",
+          "name": "Director of Finance"
+        },
+        {
+          "id": "accounts_payable",
+          "name": "Accounts Payable"
+        },
+        {
+          "id": "dir_of_pur",
+          "name": "Dir Of Pur"
+        },
+        {
+          "id": "storeroom_receiver",
+          "name": "Storeroom/Receiver"
+        },
+        {
+          "id": "po_req_selectdepts",
+          "name": "PO/REQ/SelectDepts"
+        },
+        {
+          "id": "po_aprv_req_selectdepts",
+          "name": "PO/APRV/REQ/SelectDepts"
+        },
+        {
+          "id": "it_manager",
+          "name": "IT Manager"
+        },
+        {
+          "id": "po_req_selectdepts_recv_aprv",
+          "name": "PO/REQ/SelectDepts/Recv/APRV"
+        },
+        {
+          "id": "cost_controller_accounts_payable",
+          "name": "Cost Controller/ Accounts Payable"
+        }
+      ]
+    },
+    {
+      "id": "birch_street",
+      "name": "Birch Street",
+      "systems": [
+        {
+          "id": "11102_0",
+          "name": "11102.0"
+        },
+        {
+          "id": "11121_0",
+          "name": "11121.0"
+        },
+        {
+          "id": "11130_0",
+          "name": "11130.0"
+        },
+        {
+          "id": "11160_0",
+          "name": "11160.0"
+        },
+        {
+          "id": "11171_0",
+          "name": "11171.0"
+        },
+        {
+          "id": "11725_0",
+          "name": "11725.0"
+        },
+        {
+          "id": "11720_0",
+          "name": "11720.0"
+        },
+        {
+          "id": "11700_0",
+          "name": "11700.0"
+        },
+        {
+          "id": "11730_0",
+          "name": "11730.0"
+        },
+        {
+          "id": "11735_0",
+          "name": "11735.0"
+        },
+        {
+          "id": "11745_0",
+          "name": "11745.0"
+        },
+        {
+          "id": "11731_0",
+          "name": "11731.0"
+        },
+        {
+          "id": "11705_0",
+          "name": "11705.0"
+        }
+      ]
+    },
+    {
+      "id": "nomina_control_tiempo",
+      "name": "Nomina & control de tiempo",
+      "systems": [
+        {
+          "id": "administrador_monolith",
+          "name": "Administrador Monolith"
+        },
+        {
+          "id": "gerente_reg_acciones",
+          "name": "Gerente Reg Acciones"
+        },
+        {
+          "id": "gerente_reloj_marcador",
+          "name": "Gerente reloj marcador"
+        },
+        {
+          "id": "emc",
+          "name": "EMC"
+        }
+      ]
+    },
+    {
+      "id": "simphony",
+      "name": "Simphony",
+      "systems": [
+        {
+          "id": "reporting_analytics",
+          "name": "Reporting and Analytics"
+        },
+        {
+          "id": "tarjeta_pos",
+          "name": "Tarjeta POS"
+        },
+        {
+          "id": "server",
+          "name": "Server"
+        },
+        {
+          "id": "bartender_simphony",
+          "name": "Bartender"
+        },
+        {
+          "id": "in_room_dining",
+          "name": "In Room Dining"
+        },
+        {
+          "id": "cashier",
+          "name": "Cashier"
+        },
+        {
+          "id": "cashier_discount",
+          "name": "Cashier/ Discount"
+        },
+        {
+          "id": "supervisor_simphony",
+          "name": "Supervisor"
+        },
+        {
+          "id": "manager_simphony",
+          "name": "Manager"
+        }
+      ]
+    },
+    {
+      "id": "finanzas",
+      "name": "Finanzas",
+      "systems": [
+        {
+          "id": "sun",
+          "name": "SUN"
+        },
+        {
+          "id": "bmqa",
+          "name": "BMQA"
+        },
+        {
+          "id": "operations_audit",
+          "name": "Operations Audit"
+        },
+        {
+          "id": "datalink",
+          "name": "DataLink"
+        },
+        {
+          "id": "blackline",
+          "name": "Blackline"
+        },
+        {
+          "id": "proplan",
+          "name": "PROPLAN"
+        },
+        {
+          "id": "fms",
+          "name": "FMS"
+        }
+      ]
+    },
+    {
+      "id": "fac_elec",
+      "name": "Fac. Elec.",
+      "systems": [
+        {
+          "id": "bms",
+          "name": "BMS"
+        },
+        {
+          "id": "zennio",
+          "name": "ZENNIO"
+        }
+      ]
+    },
+    {
+      "id": "miscelaneos_delphi",
+      "name": "Miscelaneos y delphi",
+      "systems": [
+        {
+          "id": "pressreader",
+          "name": "PRESSREADER"
+        },
+        {
+          "id": "sertify",
+          "name": "SERTIFY"
+        },
+        {
+          "id": "book4time",
+          "name": "BOOK4TIME"
+        },
+        {
+          "id": "opentable",
+          "name": "OPENTABLE"
+        },
+        {
+          "id": "vision_line",
+          "name": "VISION LINE"
+        },
+        {
+          "id": "op_audi",
+          "name": "OP AUDI"
+        },
+        {
+          "id": "reports",
+          "name": "Reports"
+        },
+        {
+          "id": "cloudflare",
+          "name": "Cloudflare"
+        },
+        {
+          "id": "sinergy_mms",
+          "name": "Sinergy MMS"
+        },
+        {
+          "id": "vantage",
+          "name": "Vantage"
+        },
+        {
+          "id": "delphi",
+          "name": "Delphi"
+        }
+      ]
+    },
+    {
+      "id": "grupos",
+      "name": "Grupos",
+      "systems": [
+        {
+          "id": "eng",
+          "name": "ENG"
+        },
+        {
+          "id": "sox",
+          "name": "SOX"
+        },
+        {
+          "id": "pr",
+          "name": "PR"
+        },
+        {
+          "id": "hc",
+          "name": "HC"
+        },
+        {
+          "id": "oa",
+          "name": "OA"
+        },
+        {
+          "id": "cb",
+          "name": "CB"
+        },
+        {
+          "id": "fb",
+          "name": "FB"
+        },
+        {
+          "id": "fc",
+          "name": "FC"
+        },
+        {
+          "id": "fo",
+          "name": "FO"
+        },
+        {
+          "id": "gm",
+          "name": "GM"
+        },
+        {
+          "id": "hrd",
+          "name": "HRD"
+        },
+        {
+          "id": "hsk",
+          "name": "HSK"
+        },
+        {
+          "id": "ism_grupos",
+          "name": "ISM"
+        },
+        {
+          "id": "kit",
+          "name": "KIT"
+        },
+        {
+          "id": "mkt",
+          "name": "MKT"
+        },
+        {
+          "id": "pur",
+          "name": "PUR"
+        },
+        {
+          "id": "res",
+          "name": "RES"
+        },
+        {
+          "id": "sal",
+          "name": "SAL"
+        },
+        {
+          "id": "sec",
+          "name": "SEC"
+        },
+        {
+          "id": "hod",
+          "name": "HOD"
+        }
+      ]
+    },
+    {
+      "id": "email",
+      "name": "Email",
+      "systems": [
+        {
+          "id": "email",
+          "name": "eMail"
+        },
+        {
+          "id": "email_mobile",
+          "name": "eMail Mobile"
+        }
+      ]
+    },
+    {
+      "id": "other_systems",
+      "name": "Other Systems",
+      "systems": [
+        {
+          "id": "avero",
+          "name": "Avero"
+        },
+        {
+          "id": "synergymms",
+          "name": "Synergymms"
+        },
+        {
+          "id": "kualtrix",
+          "name": "KUALTRIX"
+        },
+        {
+          "id": "trayaway",
+          "name": "TRAYAWAY"
+        },
+        {
+          "id": "kypsu",
+          "name": "KYPSU"
+        },
+        {
+          "id": "wiq",
+          "name": "WIQ"
+        },
+        {
+          "id": "alice",
+          "name": "ALICE"
+        },
+        {
+          "id": "adobe",
+          "name": "ADOBE"
+        },
+        {
+          "id": "foxit",
+          "name": "FOXIT"
+        },
+        {
+          "id": "owner_rlt",
+          "name": "OWNER RLT"
+        }
+      ]
+    }
+  ],
+  "access_permissions": {
+    "gerencia": {
+      "gerente_general": {
+        "onq": {
+          "onq_user": true,
+          "onq_ri": true
+        },
+        "opera_pms": {
+          "ar_clerk": true,
+          "ar_manager": true,
+          "night_auditor": true
+        }
+      }
+    }
+  }
 }

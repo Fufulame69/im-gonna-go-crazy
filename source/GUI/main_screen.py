@@ -13,6 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import departments and positions screen
 from departments_and_positions import DepartmentsAndPositionsScreen
+from hotel_systems import HotelSystemsScreen
 
 class MainScreen(QMainWindow):
     def __init__(self):
@@ -429,6 +430,27 @@ class MainScreen(QMainWindow):
         departments_btn.clicked.connect(self.open_departments_and_positions)
         nav_layout.addWidget(departments_btn)
         
+        # Hotel Systems button
+        hotel_systems_btn = QPushButton("Hotel Systems")
+        hotel_systems_btn.setFixedHeight(40)  # Fixed height for buttons
+        hotel_systems_btn.setMinimumWidth(120)  # Minimum width
+        hotel_systems_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #3498db;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-weight: bold;
+                font-size: 10pt;
+            }
+            QPushButton:hover {
+                background-color: #2980b9;
+            }
+        """)
+        hotel_systems_btn.clicked.connect(self.open_hotel_systems)
+        nav_layout.addWidget(hotel_systems_btn)
+        
         # Add stretch to push exit button to the right
         nav_layout.addStretch()
         
@@ -463,6 +485,15 @@ class MainScreen(QMainWindow):
             self.hide()  # Hide the current screen
         else:
             QMessageBox.warning(self, "Error", "Departments and Positions screen is not available yet.")
+    
+    def open_hotel_systems(self):
+        """Open the hotel systems screen"""
+        if HotelSystemsScreen:
+            self.hotel_systems_screen = HotelSystemsScreen()
+            self.hotel_systems_screen.show()
+            self.hide()  # Hide the current screen
+        else:
+            QMessageBox.warning(self, "Error", "Hotel Systems screen is not available yet.")
     
     def run(self):
         """Start the main screen"""

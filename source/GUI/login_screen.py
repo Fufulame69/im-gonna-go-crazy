@@ -13,7 +13,7 @@ class LoginScreen(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Waldorf Access Form Generator")
-        self.setFixedSize(450, 400)
+        self.setFixedSize(500, 420)
         
         # Center the window on screen
         self.center_window()
