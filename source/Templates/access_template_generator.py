@@ -400,5 +400,170 @@ def create_solicitud_pdf():
         print(f"An error occurred: {e}")
 
 
+def create_custom_pdf(name, onq_user, email, department, position, date, access_permissions, system_categories):
+    """Create a custom PDF with user-provided data and access permissions."""
+    
+    logo_path = "assets/waldorf_logo.png"  # Update this path as needed
+    
+    try:
+        # Create PDF object (Letter size, mm units)
+        pdf = PDF(orientation='P', unit='mm', format='Letter')
+        pdf.set_margins(10, 10, 10)
+        pdf.add_page()
+        
+        # Draw the header
+        pdf.draw_header(logo_path)
+        
+        # Draw form section with user data
+        draw_form_with_data(pdf, name, onq_user, email, department, position, date)
+        
+        # Draw system sections based on access permissions
+        draw_system_sections(pdf, access_permissions, system_categories)
+        
+        # Draw other sections
+        pdf.draw_acknowledgement()
+        pdf.draw_observations()
+        pdf.draw_footer_signatures()
+        
+        return pdf
+        
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return None
+
+
+def draw_form_with_data(pdf, name, onq_user, email, department, position, date):
+    """Draw the form section with user data filled in"""
+    # --- Row 1: Nombre, Posicion, Departamento, Fecha ---
+    page_w = pdf.w - pdf.l_margin - pdf.r_margin
+    col_w = page_w / 4 - 2  # 4 columns with 2mm gap
+    
+    # Store current Y position for text labels
+    label_y = pdf.get_y()
+    box_y = label_y + 6  # Position boxes below labels
+    
+    pdf.set_font('Helvetica', 'B', 8)
+    pdf.set_text_color(*pdf.col_gray_700)
+    
+    # Field 1: NOMBRE - Position text above where box will be
+    pdf.set_xy(pdf.l_margin, label_y)
+    pdf.cell(col_w, 5, "NOMBRE Y APELLIDO")
+    
+    # Field 2: POSICION
+    pdf.set_xy(pdf.l_margin + col_w + 2, label_y)
+    pdf.cell(col_w, 5, "POSICION")
+    
+    # Field 3: DEPARTAMENTO
+    pdf.set_xy(pdf.l_margin + (col_w + 2) * 2, label_y)
+    pdf.cell(col_w, 5, "DEPARTAMENTO")
+    
+    # Field 4: Fecha Ingreso
+    pdf.set_xy(pdf.l_margin + (col_w + 2) * 3, label_y)
+    pdf.cell(col_w, 5, "Fecha Ingreso")
+    
+    # Move to box position
+    pdf.set_y(box_y)
+    
+    # --- Input boxes for Row 1 with data ---
+    pdf.set_draw_color(*pdf.col_gray_400)
+    pdf.set_font('Helvetica', '', 9)
+    
+    # Box 1 - Name
+    start_x = pdf.get_x()
+    pdf.rect(start_x, pdf.get_y(), col_w, pdf.form_cell_h)
+    pdf.set_xy(start_x + 1, pdf.get_y() + 1.5)
+    pdf.cell(col_w - 2, pdf.form_cell_h - 2, name)
+    pdf.set_x(start_x + col_w + 2)  # Move to next position
+    
+    # Box 2 - Position
+    box2_x = pdf.get_x()
+    pdf.rect(box2_x, pdf.get_y(), col_w, pdf.form_cell_h)
+    pdf.set_xy(box2_x + 1, pdf.get_y() + 1.5)
+    pdf.cell(col_w - 2, pdf.form_cell_h - 2, position)
+    pdf.set_x(start_x + (col_w + 2) * 2)  # Move to next position
+    
+    # Box 3 - Department
+    box3_x = pdf.get_x()
+    pdf.rect(box3_x, pdf.get_y(), col_w, pdf.form_cell_h)
+    pdf.set_xy(box3_x + 1, pdf.get_y() + 1.5)
+    pdf.cell(col_w - 2, pdf.form_cell_h - 2, department)
+    pdf.set_x(start_x + (col_w + 2) * 3)  # Move to next position
+    
+    # Box 4 - Date
+    box4_x = pdf.get_x()
+    pdf.set_fill_color(*pdf.col_gray_100)
+    pdf.rect(box4_x, pdf.get_y(), col_w, pdf.form_cell_h, 'F')
+    
+    # Add date on top of box 4
+    pdf.set_xy(box4_x + 1, pdf.get_y() + 1.5)
+    pdf.cell(col_w - 2, pdf.form_cell_h - 2, date, align='C')
+    pdf.set_fill_color(255, 255, 255)  # Reset fill
+    
+    pdf.ln(pdf.form_cell_h + pdf.section_gap)  # Move down
+    
+    # --- Row 2: IDM Login, Email ---
+    col_w_2 = page_w / 2 - 1  # 2 columns with 2mm gap
+    
+    # Store positions for labels above boxes
+    label_y = pdf.get_y()
+    box_y = label_y + 6
+    
+    pdf.set_font('Helvetica', 'B', 8)
+    pdf.set_text_color(*pdf.col_gray_700)
+    
+    # Field 1: IDM Login - Position text above box
+    pdf.set_xy(pdf.l_margin, label_y)
+    pdf.cell(col_w_2, 5, "IDM Login Name")
+    
+    # Field 2: Email Account
+    pdf.set_xy(pdf.l_margin + col_w_2 + 2, label_y)
+    pdf.cell(col_w_2, 5, "Email Account")
+    
+    # Move to box position
+    pdf.set_y(box_y)
+    
+    # --- Input boxes for Row 2 with data ---
+    start_x = pdf.get_x()
+    # Draw boxes first
+    pdf.rect(start_x, pdf.get_y(), col_w_2, pdf.form_cell_h)
+    pdf.set_xy(start_x + 1, pdf.get_y() + 1.5)
+    pdf.cell(col_w_2 - 2, pdf.form_cell_h - 2, onq_user)
+    
+    box2_x = start_x + col_w_2 + 2
+    pdf.rect(box2_x, pdf.get_y(), col_w_2, pdf.form_cell_h)
+    pdf.set_xy(box2_x + 1, pdf.get_y() + 1.5)
+    pdf.cell(col_w_2 - 2, pdf.form_cell_h - 2, email)
+    
+    # --- Sub-labels ---
+    pdf.ln(pdf.form_cell_h + 1)
+    pdf.set_font('Helvetica', '', 7)
+    pdf.set_text_color(*pdf.col_gray_500)
+    pdf.cell(col_w_2, 5, "Solo para uso de computacion")
+    
+    pdf.ln(pdf.form_cell_h + pdf.section_gap)  # Move down
+
+
+def draw_system_sections(pdf, access_permissions, system_categories):
+    """Draw system sections based on access permissions"""
+    # For each system category, check if there are access permissions
+    for category in system_categories:
+        category_id = category["id"]
+        category_name = category["name"]
+        
+        # Get access permissions for this category
+        category_access = access_permissions.get(category_id, {})
+        
+        # Get systems that this position has access to
+        accessible_systems = []
+        for system in category.get("systems", []):
+            system_id = system["id"]
+            if category_access.get(system_id, False):
+                accessible_systems.append(system["name"])
+        
+        # If there are accessible systems, draw the section
+        if accessible_systems:
+            pdf.draw_system_section(category_name, accessible_systems)
+
+
 if __name__ == "__main__":
     create_solicitud_pdf()
