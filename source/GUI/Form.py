@@ -14,8 +14,9 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from Templates.access_template_generator import PDF, create_custom_pdf
 from Templates.departure_template import SeparationChecklistPDF
 
-# Import navigation bar
+# Import navigation bar and database manager
 from GUI.navigation_bar import NavigationBar
+from database.db_manager import db_manager
 
 class FormScreen(QMainWindow):
     def __init__(self):
@@ -81,14 +82,12 @@ class FormScreen(QMainWindow):
             QMessageBox.warning(self, "Config Warning", f"Failed to save config: {str(e)}")
     
     def load_database(self):
-        """Load data from the database.json file"""
+        """Load data from the database using the database manager"""
         try:
-            db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "database", "database.json")
-            with open(db_path, 'r', encoding='utf-8') as f:
-                self.db_data = json.load(f)
+            self.db_data = db_manager.load_database()
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to load database: {str(e)}")
-            self.db_data = {"departments": [], "system_categories": []}
+            self.db_data = {"departments": [], "system_categories": [], "access_permissions": {}}
         
         # Load persons data if generated_forms_dir exists
         if self.generated_forms_dir:

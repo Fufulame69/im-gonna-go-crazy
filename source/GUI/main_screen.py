@@ -11,8 +11,9 @@ from PyQt5.QtGui import QFont, QIcon
 # Add the parent directory to the path to import other modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-# Import navigation bar
+# Import navigation bar and database manager
 from GUI.navigation_bar import NavigationBar
+from database.db_manager import db_manager
 
 class MainScreen(QMainWindow):
     def __init__(self):
@@ -107,14 +108,12 @@ class MainScreen(QMainWindow):
         self.move(x, y)
         
     def load_database(self):
-        """Load data from the database.json file"""
+        """Load data from the database using the database manager"""
         try:
-            db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "database", "database.json")
-            with open(db_path, 'r', encoding='utf-8') as f:
-                self.db_data = json.load(f)
+            self.db_data = db_manager.load_database()
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to load database: {str(e)}")
-            self.db_data = {"departments": [], "system_categories": []}
+            self.db_data = {"departments": [], "system_categories": [], "access_permissions": {}}
     
     def save_permissions_to_database(self, dept_id, position_id, category_id, system_id, is_checked):
         """Save or remove permission in the database"""
