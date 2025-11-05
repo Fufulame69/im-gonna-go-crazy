@@ -316,7 +316,7 @@ class DepartmentsAndPositionsScreen(QMainWindow):
         """Go back to the main screen"""
         # Import here to avoid circular import
         try:
-            from main_screen import MainScreen
+            from GUI.main_screen import MainScreen
             self.main_screen = MainScreen()
             self.main_screen.show()
             self.close()  # Close the current screen
@@ -327,7 +327,7 @@ class DepartmentsAndPositionsScreen(QMainWindow):
         """Go to the hotel systems screen"""
         # Import here to avoid circular import
         try:
-            from hotel_systems import HotelSystemsScreen
+            from GUI.hotel_systems import HotelSystemsScreen
             self.hotel_systems_screen = HotelSystemsScreen()
             self.hotel_systems_screen.show()
             self.close()  # Close the current screen

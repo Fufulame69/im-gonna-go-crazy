@@ -18,6 +18,11 @@ class HotelSystemsScreen(QMainWindow):
         self.setWindowTitle("Waldorf Access Form Generator - Hotel Systems")
         self.setGeometry(100, 100, 1200, 800)
         
+        # Set window icon
+        icon_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "assets", "waldorf_ico.ico")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QIcon(icon_path))
+        
         # Center the window on screen
         self.center_window()
         
@@ -316,7 +321,7 @@ class HotelSystemsScreen(QMainWindow):
         """Go back to the main screen"""
         # Import here to avoid circular import
         try:
-            from main_screen import MainScreen
+            from GUI.main_screen import MainScreen
             self.main_screen = MainScreen()
             self.main_screen.show()
             self.close()  # Close the current screen
@@ -327,7 +332,7 @@ class HotelSystemsScreen(QMainWindow):
         """Go to the departments and positions screen"""
         # Import here to avoid circular import
         try:
-            from departments_and_positions import DepartmentsAndPositionsScreen
+            from GUI.departments_and_positions import DepartmentsAndPositionsScreen
             self.departments_screen = DepartmentsAndPositionsScreen()
             self.departments_screen.show()
             self.close()  # Close the current screen

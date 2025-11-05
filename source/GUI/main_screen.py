@@ -12,14 +12,19 @@ from PyQt5.QtGui import QFont, QIcon
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import departments and positions screen
-from departments_and_positions import DepartmentsAndPositionsScreen
-from hotel_systems import HotelSystemsScreen
+from GUI.departments_and_positions import DepartmentsAndPositionsScreen
+from GUI.hotel_systems import HotelSystemsScreen
 
 class MainScreen(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Waldorf Access Form Generator - Access Matrix")
         self.setGeometry(100, 100, 1200, 800)
+        
+        # Set window icon
+        icon_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "assets", "waldorf_ico.ico")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QIcon(icon_path))
         
         # Center the window on screen
         self.center_window()

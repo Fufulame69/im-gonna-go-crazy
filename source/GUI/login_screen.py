@@ -15,6 +15,11 @@ class LoginScreen(QMainWindow):
         self.setWindowTitle("Waldorf Access Form Generator")
         self.setFixedSize(500, 420)
         
+        # Set window icon
+        icon_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "assets", "waldorf_ico.ico")
+        if os.path.exists(icon_path):
+            self.setWindowIcon(QIcon(icon_path))
+        
         # Center the window on screen
         self.center_window()
         
