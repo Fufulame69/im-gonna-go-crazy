@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import firebase_admin
 from firebase_admin import credentials
@@ -37,10 +38,17 @@ class DatabaseManager:
                     service_account_path = firebase_config["serviceAccountKey"]
                     # If path is relative, make it relative to project root
                     if not os.path.isabs(service_account_path):
-                        service_account_path = os.path.join(
-                            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-                            service_account_path
-                        )
+                        # Check if we're running in a PyInstaller bundle
+                        if getattr(sys, 'frozen', False):
+                            # We're running in a PyInstaller bundle
+                            bundle_dir = sys._MEIPASS
+                            service_account_path = os.path.join(bundle_dir, service_account_path)
+                        else:
+                            # We're running in a normal Python environment
+                            service_account_path = os.path.join(
+                                os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                                service_account_path
+                            )
                     
                     # Initialize Firebase with service account credentials
                     cred = credentials.Certificate(service_account_path)
@@ -76,7 +84,13 @@ class DatabaseManager:
             db_path = config.db_config.get_local_db_path()
             # If path is relative, make it relative to project root
             if not os.path.isabs(db_path):
-                db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), db_path)
+                # Check if we're running in a PyInstaller bundle
+                if getattr(sys, 'frozen', False):
+                    # We're running in a PyInstaller bundle, use the current working directory
+                    db_path = os.path.join(os.getcwd(), db_path)
+                else:
+                    # We're running in a normal Python environment
+                    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), db_path)
             
             with open(db_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
@@ -121,7 +135,13 @@ class DatabaseManager:
             db_path = config.db_config.get_local_db_path()
             # If path is relative, make it relative to project root
             if not os.path.isabs(db_path):
-                db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), db_path)
+                # Check if we're running in a PyInstaller bundle
+                if getattr(sys, 'frozen', False):
+                    # We're running in a PyInstaller bundle, use the current working directory
+                    db_path = os.path.join(os.getcwd(), db_path)
+                else:
+                    # We're running in a normal Python environment
+                    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), db_path)
             
             # Ensure directory exists
             os.makedirs(os.path.dirname(db_path), exist_ok=True)

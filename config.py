@@ -1,10 +1,20 @@
 import os
+import sys
 from dotenv import load_dotenv
 from enum import Enum
 from typing import Optional
 
 # Load environment variables from .env file
-load_dotenv()
+# Check if we're running in a PyInstaller bundle
+if getattr(sys, 'frozen', False):
+    # We're running in a PyInstaller bundle
+    bundle_dir = sys._MEIPASS
+    env_path = os.path.join(bundle_dir, '.env')
+else:
+    # We're running in a normal Python environment
+    env_path = '.env'
+
+load_dotenv(env_path)
 
 class DatabaseType(Enum):
     """Enum for supported database types"""
