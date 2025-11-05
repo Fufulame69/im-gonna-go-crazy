@@ -5,7 +5,7 @@ import datetime
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
                             QLabel, QPushButton, QMessageBox, QLineEdit, QComboBox,
                             QRadioButton, QButtonGroup, QDateEdit, QFrame, QGroupBox,
-                            QScrollArea, QCheckBox)
+                            QScrollArea, QCheckBox, QFileDialog)
 from PyQt5.QtCore import Qt, QDate, pyqtSignal
 from PyQt5.QtGui import QFont, QIcon
 
@@ -17,7 +17,7 @@ class FormScreen(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Waldorf Access Form Generator - Sign In and Departure Form")
-        self.setGeometry(100, 100, 800, 700)
+        self.setGeometry(100, 100, 850, 750)
         
         # Set window icon
         icon_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "assets", "waldorf_ico.ico")
@@ -26,6 +26,14 @@ class FormScreen(QMainWindow):
         
         # Center the window on screen
         self.center_window()
+        
+        # Initialize configuration and paths
+        self.config_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config.json")
+        self.generated_forms_dir = None
+        self.persons_data = {}
+        
+        # Load configuration
+        self.load_config()
         
         # Load data from database
         self.load_database()
@@ -47,6 +55,27 @@ class FormScreen(QMainWindow):
         y = (screen_geometry.height() - self.height()) // 2
         self.move(x, y)
         
+    def load_config(self):
+        """Load configuration from config.json file"""
+        try:
+            if os.path.exists(self.config_file):
+                with open(self.config_file, 'r', encoding='utf-8') as f:
+                    config = json.load(f)
+                    self.generated_forms_dir = config.get("generated_forms_dir", None)
+        except Exception as e:
+            QMessageBox.warning(self, "Config Warning", f"Failed to load config: {str(e)}")
+    
+    def save_config(self):
+        """Save configuration to config.json file"""
+        try:
+            config = {
+                "generated_forms_dir": self.generated_forms_dir
+            }
+            with open(self.config_file, 'w', encoding='utf-8') as f:
+                json.dump(config, f, indent=2)
+        except Exception as e:
+            QMessageBox.warning(self, "Config Warning", f"Failed to save config: {str(e)}")
+    
     def load_database(self):
         """Load data from the database.json file"""
         try:
@@ -56,6 +85,21 @@ class FormScreen(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to load database: {str(e)}")
             self.db_data = {"departments": [], "system_categories": []}
+        
+        # Load persons data if generated_forms_dir exists
+        if self.generated_forms_dir:
+            self.load_persons_data()
+    
+    def load_persons_data(self):
+        """Load persons data from the JSON tracking file"""
+        try:
+            persons_file = os.path.join(self.generated_forms_dir, "persons.json")
+            if os.path.exists(persons_file):
+                with open(persons_file, 'r', encoding='utf-8') as f:
+                    self.persons_data = json.load(f)
+        except Exception as e:
+            QMessageBox.warning(self, "Data Warning", f"Failed to load persons data: {str(e)}")
+            self.persons_data = {}
     
     def create_widgets(self):
         """Create all UI elements for the form screen"""
@@ -66,6 +110,9 @@ class FormScreen(QMainWindow):
         title_label.setAlignment(Qt.AlignCenter)
         self.main_layout.addWidget(title_label)
         
+        # Directory selection section
+        self.create_directory_selection(self.main_layout)
+        
         # Create a scroll area for the form content
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
@@ -74,6 +121,9 @@ class FormScreen(QMainWindow):
         form_widget = QWidget()
         form_layout = QVBoxLayout(form_widget)
         form_layout.setSpacing(15)
+        
+        # Person selection section
+        self.create_person_selection(form_layout)
         
         # 2-Textboxes in order: Name, OnQ user, email, department combobox, position combobox
         self.create_form_fields(form_layout)
@@ -90,6 +140,107 @@ class FormScreen(QMainWindow):
         
         # Navigation bar
         self.create_navigation_bar()
+    
+    def create_directory_selection(self, layout):
+        """Create directory selection UI components"""
+        # Group box for directory selection
+        dir_group = QGroupBox("Generated Forms Directory")
+        dir_group.setStyleSheet("""
+            QGroupBox {
+                font-weight: bold;
+                border: 2px solid #3498db;
+                border-radius: 5px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #2c3e50;
+            }
+        """)
+        dir_layout = QHBoxLayout(dir_group)
+        dir_layout.setSpacing(10)
+        
+        # Directory label
+        dir_label = QLabel("Please pick a directory where you would like the generations to be:")
+        dir_layout.addWidget(dir_label)
+        
+        # Directory path display
+        self.dir_path_label = QLabel("No directory selected")
+        self.dir_path_label.setStyleSheet("color: #7f8c8d; font-style: italic;")
+        if self.generated_forms_dir:
+            self.dir_path_label.setText(self.generated_forms_dir)
+            self.dir_path_label.setStyleSheet("color: #27ae60; font-weight: bold;")
+        dir_layout.addWidget(self.dir_path_label)
+        
+        # Browse button
+        self.browse_button = QPushButton("Browse")
+        self.browse_button.setStyleSheet("""
+            QPushButton {
+                background-color: #3498db;
+                color: white;
+                border: none;
+                padding: 8px 15px;
+                border-radius: 4px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #2980b9;
+            }
+        """)
+        self.browse_button.clicked.connect(self.browse_directory)
+        dir_layout.addWidget(self.browse_button)
+        
+        layout.addWidget(dir_group)
+    
+    def create_person_selection(self, layout):
+        """Create person selection UI components"""
+        # Group box for person selection
+        person_group = QGroupBox("Person Selection")
+        person_group.setStyleSheet("""
+            QGroupBox {
+                font-weight: bold;
+                border: 2px solid #3498db;
+                border-radius: 5px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            QGroupBox::title {
+                subcontrol-origin: margin;
+                left: 10px;
+                padding: 0 5px 0 5px;
+                color: #2c3e50;
+            }
+        """)
+        person_layout = QHBoxLayout(person_group)
+        person_layout.setSpacing(10)
+        
+        # Person selection label
+        person_label = QLabel("Select Person:")
+        person_label.setFixedWidth(100)
+        person_layout.addWidget(person_label)
+        
+        # Person combobox (editable for searching)
+        self.person_combo = QComboBox()
+        self.person_combo.setEditable(True)
+        self.person_combo.setInsertPolicy(QComboBox.NoInsert)  # Don't insert typed text as new item
+        # Start with empty combobox
+        self.person_combo.setPlaceholderText("Type to search or enter new person name...")
+        # Load existing persons if directory is selected
+        if self.generated_forms_dir and self.persons_data:
+            for person_id, person_info in self.persons_data.items():
+                display_text = f"{person_info['name']} ({person_info['email']})"
+                self.person_combo.addItem(display_text, person_id)
+        
+        self.person_combo.currentIndexChanged.connect(self.on_person_changed)
+        self.person_combo.editTextChanged.connect(self.on_person_text_changed)
+        # Install event filter for key press events
+        self.person_combo.installEventFilter(self)
+        person_layout.addWidget(self.person_combo)
+        
+        layout.addWidget(person_group)
     
     def create_form_fields(self, layout):
         """Create the form input fields"""
@@ -125,10 +276,10 @@ class FormScreen(QMainWindow):
         
         # OnQ User field
         onq_layout = QHBoxLayout()
-        onq_label = QLabel("OnQ User:")
+        onq_label = QLabel("OnQ User (Optional):")
         onq_label.setFixedWidth(100)
         self.onq_input = QLineEdit()
-        self.onq_input.setPlaceholderText("Enter OnQ username")
+        self.onq_input.setPlaceholderText("Enter OnQ username (optional)")
         onq_layout.addWidget(onq_label)
         onq_layout.addWidget(self.onq_input)
         personal_layout.addLayout(onq_layout)
@@ -407,6 +558,152 @@ class FormScreen(QMainWindow):
         
         self.main_layout.addWidget(nav_frame)
     
+    def browse_directory(self):
+        """Open directory browser to select generated forms directory"""
+        selected_dir = QFileDialog.getExistingDirectory(self, "Select Generated Forms Directory")
+        if selected_dir:
+            # Create generated_forms subdirectory
+            self.generated_forms_dir = os.path.join(selected_dir, "generated_forms")
+            try:
+                os.makedirs(self.generated_forms_dir, exist_ok=True)
+                self.dir_path_label.setText(self.generated_forms_dir)
+                self.dir_path_label.setStyleSheet("color: #27ae60; font-weight: bold;")
+                
+                # Save configuration
+                self.save_config()
+                
+                # Load persons data
+                self.load_persons_data()
+                
+                # Update person combobox
+                self.update_person_combo()
+                
+                QMessageBox.information(self, "Success", f"Directory set to: {self.generated_forms_dir}")
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Failed to create directory: {str(e)}")
+    
+    def update_person_combo(self):
+        """Update the person combobox with loaded persons data"""
+        current_selection = self.person_combo.currentData()
+        current_text = self.person_combo.currentText()
+        self.person_combo.clear()
+        self.person_combo.setEditable(True)
+        self.person_combo.setInsertPolicy(QComboBox.NoInsert)
+        self.person_combo.setPlaceholderText("Type to search or enter new person name...")
+        
+        if self.persons_data:
+            for person_id, person_info in self.persons_data.items():
+                display_text = f"{person_info['name']} ({person_info['email']})"
+                self.person_combo.addItem(display_text, person_id)
+            
+            # Restore previous selection if possible
+            for i in range(self.person_combo.count()):
+                if self.person_combo.itemData(i) == current_selection:
+                    self.person_combo.setCurrentIndex(i)
+                    break
+            else:
+                # If no matching data found, restore the text
+                self.person_combo.setEditText(current_text)
+    
+    def on_person_changed(self, index):
+        """Handle person selection change"""
+        person_id = self.person_combo.itemData(index)
+        if person_id and person_id in self.persons_data:
+            person_info = self.persons_data[person_id]
+            # Fill form fields with person's data
+            self.name_input.setText(person_info['name'])
+            self.email_input.setText(person_info['email'])
+            # Clear other fields that should be filled fresh
+            self.onq_input.clear()
+            self.department_combo.setCurrentIndex(0)
+            self.position_combo.setCurrentIndex(0)
+            # For existing users, default to modification date
+            self.modification_radio.setChecked(True)
+    
+    def on_person_text_changed(self, text):
+        """Handle text change in person combobox for searching/filtering"""
+        if not text.strip():
+            # If text is empty, just return - don't reset anything
+            return
+        
+        # Search for matching person
+        text_lower = text.lower()
+        for i in range(self.person_combo.count()):
+            item_text = self.person_combo.itemText(i)
+            if text_lower in item_text.lower():
+                # Found a match, but don't automatically select to allow user to continue typing
+                return
+        
+        # If no exact match found, user might be typing a new person name
+        # We don't automatically clear the form to allow continuous typing
+    
+    def eventFilter(self, obj, event):
+        """Event filter to handle key press events in the person combobox"""
+        if obj == self.person_combo and event.type() == event.KeyPress:
+            if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
+                # Get current text
+                current_text = self.person_combo.currentText().strip()
+                
+                # Check if the text matches an existing person
+                for i in range(self.person_combo.count()):
+                    item_text = self.person_combo.itemText(i)
+                    if current_text.lower() == item_text.lower():
+                        # Exact match found, select this person
+                        self.person_combo.blockSignals(True)
+                        self.person_combo.setCurrentIndex(i)
+                        self.person_combo.blockSignals(False)
+                        self.on_person_changed(i)
+                        return True
+                
+                # No exact match, check if it's a partial match
+                for i in range(self.person_combo.count()):
+                    item_text = self.person_combo.itemText(i)
+                    if current_text.lower() in item_text.lower():
+                        # Partial match found, select this person
+                        self.person_combo.blockSignals(True)
+                        self.person_combo.setCurrentIndex(i)
+                        self.person_combo.blockSignals(False)
+                        self.on_person_changed(i)
+                        return True
+                
+                # No match found, just accept the text as is
+                return True
+        
+        return super().eventFilter(obj, event)
+    
+    def clear_form_fields(self):
+        """Clear all form input fields"""
+        self.name_input.clear()
+        self.onq_input.clear()
+        self.email_input.clear()
+        self.department_combo.setCurrentIndex(0)
+        self.position_combo.setCurrentIndex(0)
+    
+    def save_person_data(self, name, email):
+        """Save person data to the JSON tracking file"""
+        if not self.generated_forms_dir:
+            return None
+        
+        # Generate a unique person ID
+        person_id = name.lower().replace(' ', '_') + '_' + str(len(self.persons_data))
+        
+        # Add to persons data
+        self.persons_data[person_id] = {
+            'name': name,
+            'email': email,
+            'created_date': datetime.datetime.now().isoformat()
+        }
+        
+        # Save to file
+        try:
+            persons_file = os.path.join(self.generated_forms_dir, "persons.json")
+            with open(persons_file, 'w', encoding='utf-8') as f:
+                json.dump(self.persons_data, f, indent=2)
+            return person_id
+        except Exception as e:
+            QMessageBox.warning(self, "Warning", f"Failed to save person data: {str(e)}")
+            return None
+    
     def on_department_changed(self, index):
         """Handle department selection change"""
         self.position_combo.clear()
@@ -429,13 +726,18 @@ class FormScreen(QMainWindow):
     
     def generate_signin_form(self):
         """Generate the sign in form PDF"""
+        # Check if directory is selected
+        if not self.generated_forms_dir:
+            QMessageBox.warning(self, "Directory Required", "Please select a directory for generated forms first")
+            return
+        
         # Validate form inputs
         name = self.name_input.text().strip()
         onq_user = self.onq_input.text().strip()
         email = self.email_input.text().strip()
         
-        if not name or not onq_user or not email:
-            QMessageBox.warning(self, "Validation Error", "Please fill in all required fields (Name, OnQ User, Email)")
+        if not name or not email:
+            QMessageBox.warning(self, "Validation Error", "Please fill in all required fields (Name, Email)")
             return
         
         dept_index = self.department_combo.currentIndex()
@@ -458,11 +760,27 @@ class FormScreen(QMainWindow):
         # Get position access permissions
         access_permissions = self.get_position_access(dept_data["id"], pos_data["id"])
         
+        # Check if this is a new person or existing person
+        person_id = self.person_combo.currentData()
+        
+        if not person_id:
+            # Save new person data
+            person_id = self.save_person_data(name, email)
+            if person_id:
+                # Update the person combobox
+                self.update_person_combo()
+                # Select the newly added person
+                for i in range(self.person_combo.count()):
+                    if self.person_combo.itemData(i) == person_id:
+                        self.person_combo.setCurrentIndex(i)
+                        break
+        
         # Generate the PDF
         try:
-            self.create_signin_pdf(name, onq_user, email, dept_data["name"], pos_data["name"], 
-                                selected_date, access_permissions)
-            QMessageBox.information(self, "Success", f"Sign in form generated successfully for {name}")
+            output_path = self.create_signin_pdf(name, onq_user, email, dept_data["name"], pos_data["name"],
+                                               selected_date, access_permissions, person_id)
+            if output_path:
+                QMessageBox.information(self, "Success", f"Sign in form generated successfully for {name}\nSaved to: {output_path}")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to generate sign in form: {str(e)}")
     
@@ -470,7 +788,7 @@ class FormScreen(QMainWindow):
         """Generate the departure form PDF (placeholder for now)"""
         QMessageBox.information(self, "Info", "Departure form generation is not implemented yet")
     
-    def create_signin_pdf(self, name, onq_user, email, department, position, date, access_permissions):
+    def create_signin_pdf(self, name, onq_user, email, department, position, date, access_permissions, person_id):
         """Create the sign in form PDF using the template"""
         # Get system categories from database
         system_categories = self.db_data.get("system_categories", [])
@@ -480,10 +798,19 @@ class FormScreen(QMainWindow):
                              access_permissions, system_categories)
         
         if pdf:
+            # Create person folder if it doesn't exist
+            person_folder_name = name.replace(' ', '_')
+            person_folder_path = os.path.join(self.generated_forms_dir, person_folder_name)
+            os.makedirs(person_folder_path, exist_ok=True)
+            
+            # Generate unique filename with timestamp
+            timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
+            output_filename = f"sign_in_form_{timestamp}.pdf"
+            output_path = os.path.join(person_folder_path, output_filename)
+            
             # Save the PDF
-            output_filename = f"sign_in_form_{name.replace(' ', '_')}_{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
-            pdf.output(output_filename)
-            return output_filename
+            pdf.output(output_path)
+            return output_path
         return None
     
     

@@ -286,6 +286,27 @@ class DepartmentsAndPositionsScreen(QMainWindow):
         hotel_systems_btn.clicked.connect(self.go_to_hotel_systems)
         nav_layout.addWidget(hotel_systems_btn)
         
+        # Form button
+        form_btn = QPushButton("Form")
+        form_btn.setFixedHeight(40)  # Fixed height for buttons
+        form_btn.setMinimumWidth(80)  # Minimum width
+        form_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #3498db;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-weight: bold;
+                font-size: 10pt;
+            }
+            QPushButton:hover {
+                background-color: #2980b9;
+            }
+        """)
+        form_btn.clicked.connect(self.go_to_form)
+        nav_layout.addWidget(form_btn)
+        
         # Add stretch to push exit button to the right
         nav_layout.addStretch()
         
@@ -334,6 +355,16 @@ class DepartmentsAndPositionsScreen(QMainWindow):
         except ImportError as e:
             QMessageBox.critical(self, "Error", f"Failed to import hotel systems screen: {str(e)}")
     
+    def go_to_form(self):
+        """Go to the form screen"""
+        # Import here to avoid circular import
+        try:
+            from GUI.Form import FormScreen
+            self.form_screen = FormScreen()
+            self.form_screen.show()
+            self.close()  # Close the current screen
+        except ImportError as e:
+            QMessageBox.critical(self, "Error", f"Failed to import form screen: {str(e)}")
     
     def create_department_buttons(self, dept_item):
         """Create Edit and Delete buttons for a department item"""

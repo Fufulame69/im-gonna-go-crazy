@@ -456,6 +456,27 @@ class MainScreen(QMainWindow):
         hotel_systems_btn.clicked.connect(self.open_hotel_systems)
         nav_layout.addWidget(hotel_systems_btn)
         
+        # Form button
+        form_btn = QPushButton("Form")
+        form_btn.setFixedHeight(40)  # Fixed height for buttons
+        form_btn.setMinimumWidth(80)  # Minimum width
+        form_btn.setStyleSheet("""
+            QPushButton {
+                background-color: #3498db;
+                color: white;
+                border: none;
+                padding: 8px 12px;
+                border-radius: 4px;
+                font-weight: bold;
+                font-size: 10pt;
+            }
+            QPushButton:hover {
+                background-color: #2980b9;
+            }
+        """)
+        form_btn.clicked.connect(self.open_form)
+        nav_layout.addWidget(form_btn)
+        
         # Add stretch to push exit button to the right
         nav_layout.addStretch()
         
@@ -499,6 +520,16 @@ class MainScreen(QMainWindow):
             self.hide()  # Hide the current screen
         else:
             QMessageBox.warning(self, "Error", "Hotel Systems screen is not available yet.")
+    
+    def open_form(self):
+        """Open the form screen"""
+        try:
+            from GUI.Form import FormScreen
+            self.form_screen = FormScreen()
+            self.form_screen.show()
+            self.hide()  # Hide the current screen
+        except ImportError as e:
+            QMessageBox.warning(self, "Error", f"Form screen is not available: {str(e)}")
     
     def run(self):
         """Start the main screen"""

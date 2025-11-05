@@ -106,29 +106,28 @@ class PDF(FPDF):
         self.set_draw_color(*self.col_gray_400)
         self.set_font('Helvetica', '', 9)
         
+        row1_y = self.get_y()
+        
         # Box 1 - Draw empty box first
         start_x = self.get_x()
-        self.rect(start_x, self.get_y(), col_w, self.form_cell_h)
-        self.set_x(start_x + col_w + 2) # Move to next position
+        self.rect(start_x, row1_y, col_w, self.form_cell_h)
         
         # Box 2 - Draw empty box first
-        box2_x = self.get_x()
-        self.rect(box2_x, self.get_y(), col_w, self.form_cell_h)
-        self.set_x(start_x + (col_w + 2) * 2) # Move to next position
+        box2_x = start_x + col_w + 2
+        self.rect(box2_x, row1_y, col_w, self.form_cell_h)
         
         # Box 3 - Draw empty box first
-        box3_x = self.get_x()
-        self.rect(box3_x, self.get_y(), col_w, self.form_cell_h)
-        self.set_x(start_x + (col_w + 2) * 3) # Move to next position
+        box3_x = start_x + (col_w + 2) * 2
+        self.rect(box3_x, row1_y, col_w, self.form_cell_h)
         
         # Box 4 - Draw box with background
-        box4_x = self.get_x()
+        box4_x = start_x + (col_w + 2) * 3
         self.set_fill_color(*self.col_gray_100)
-        self.rect(box4_x, self.get_y(), col_w, self.form_cell_h, 'F')
+        self.rect(box4_x, row1_y, col_w, self.form_cell_h, 'F')
         
         # Add text on top of box 4
         today = datetime.date.today().strftime("%d-%b-%y")
-        self.set_xy(box4_x + 1, self.get_y() + 1.5)
+        self.set_xy(box4_x + 1, row1_y + 1.5)
         self.cell(col_w - 2, self.form_cell_h - 2, today, align='C')
         self.set_fill_color(255, 255, 255) # Reset fill
         
@@ -156,11 +155,12 @@ class PDF(FPDF):
         self.set_y(box_y)
         
         # --- Input boxes for Row 2 ---
+        row2_y = self.get_y()
         start_x = self.get_x()
         # Draw empty boxes first
-        self.rect(start_x, self.get_y(), col_w_2, self.form_cell_h)
+        self.rect(start_x, row2_y, col_w_2, self.form_cell_h)
         box2_x = start_x + col_w_2 + 2
-        self.rect(box2_x, self.get_y(), col_w_2, self.form_cell_h)
+        self.rect(box2_x, row2_y, col_w_2, self.form_cell_h)
         
         # --- Sub-labels ---
         self.ln(self.form_cell_h + 1)
@@ -170,8 +170,17 @@ class PDF(FPDF):
         
         self.ln(self.form_cell_h + self.section_gap) # Move down
 
-    def draw_system_section(self, title, options):
-        """Draws a bordered section for a system."""
+    def draw_system_section(self, title, options, checked_options=None):
+        """Draws a bordered section for a system.
+        
+        Args:
+            title: Section title
+            options: List of system options
+            checked_options: List of options that should be checked (optional)
+        """
+        if checked_options is None:
+            checked_options = []
+            
         self.set_font('Helvetica', 'B', 9)
         self.set_fill_color(*self.col_blue_900)
         self.set_text_color(255, 255, 255)
@@ -208,6 +217,16 @@ class PDF(FPDF):
             
             # Checkbox
             self.rect(x_pos, y_pos, 3, 3)
+            
+            # Draw x if option is in checked_options
+            if option in checked_options:
+                self.set_xy(x_pos - 0.1, y_pos + 0.5)
+                self.set_font('Helvetica', 'B', 8)
+                self.set_text_color(*self.col_blue_900)
+                self.cell(2, 2, "x")
+                self.set_font('Helvetica', '', 8)
+                self.set_text_color(0, 0, 0)
+            
             # Label
             self.set_x(x_pos + 4)
             self.cell(col_w - 4, 3, option)
@@ -373,8 +392,9 @@ def create_solicitud_pdf():
         # --- DYNAMIC_SYSTEM_SECTIONS_PLACEHOLDER ---
         # This is where you would loop through your system data
         # and call draw_system_section() for each one.
-        pdf.draw_system_section(sistema_base["title"], sistema_base["options"])
-        pdf.draw_system_section(sistema_finanzas["title"], sistema_finanzas["options"])
+        # For demo purposes, let's check some options
+        pdf.draw_system_section(sistema_base["title"], sistema_base["options"], ["Opción 1", "Opción 3"])
+        pdf.draw_system_section(sistema_finanzas["title"], sistema_finanzas["options"], ["Acceso Contabilidad", "Aprobar Pagos"])
         # Add more calls as needed...
         
         pdf.draw_acknowledgement()
@@ -468,34 +488,33 @@ def draw_form_with_data(pdf, name, onq_user, email, department, position, date):
     pdf.set_draw_color(*pdf.col_gray_400)
     pdf.set_font('Helvetica', '', 9)
     
+    row1_y = pdf.get_y()
+    
     # Box 1 - Name
     start_x = pdf.get_x()
-    pdf.rect(start_x, pdf.get_y(), col_w, pdf.form_cell_h)
-    pdf.set_xy(start_x + 1, pdf.get_y() + 1.5)
+    pdf.rect(start_x, row1_y, col_w, pdf.form_cell_h)
+    pdf.set_xy(start_x + 1, row1_y + 1.5)
     pdf.cell(col_w - 2, pdf.form_cell_h - 2, name)
-    pdf.set_x(start_x + col_w + 2)  # Move to next position
     
     # Box 2 - Position
-    box2_x = pdf.get_x()
-    pdf.rect(box2_x, pdf.get_y(), col_w, pdf.form_cell_h)
-    pdf.set_xy(box2_x + 1, pdf.get_y() + 1.5)
+    box2_x = start_x + col_w + 2
+    pdf.rect(box2_x, row1_y, col_w, pdf.form_cell_h)
+    pdf.set_xy(box2_x + 1, row1_y + 1.5)
     pdf.cell(col_w - 2, pdf.form_cell_h - 2, position)
-    pdf.set_x(start_x + (col_w + 2) * 2)  # Move to next position
     
     # Box 3 - Department
-    box3_x = pdf.get_x()
-    pdf.rect(box3_x, pdf.get_y(), col_w, pdf.form_cell_h)
-    pdf.set_xy(box3_x + 1, pdf.get_y() + 1.5)
+    box3_x = start_x + (col_w + 2) * 2
+    pdf.rect(box3_x, row1_y, col_w, pdf.form_cell_h)
+    pdf.set_xy(box3_x + 1, row1_y + 1.5)
     pdf.cell(col_w - 2, pdf.form_cell_h - 2, department)
-    pdf.set_x(start_x + (col_w + 2) * 3)  # Move to next position
     
     # Box 4 - Date
-    box4_x = pdf.get_x()
+    box4_x = start_x + (col_w + 2) * 3
     pdf.set_fill_color(*pdf.col_gray_100)
-    pdf.rect(box4_x, pdf.get_y(), col_w, pdf.form_cell_h, 'F')
+    pdf.rect(box4_x, row1_y, col_w, pdf.form_cell_h, 'F')
     
     # Add date on top of box 4
-    pdf.set_xy(box4_x + 1, pdf.get_y() + 1.5)
+    pdf.set_xy(box4_x + 1, row1_y + 1.5)
     pdf.cell(col_w - 2, pdf.form_cell_h - 2, date, align='C')
     pdf.set_fill_color(255, 255, 255)  # Reset fill
     
@@ -523,15 +542,16 @@ def draw_form_with_data(pdf, name, onq_user, email, department, position, date):
     pdf.set_y(box_y)
     
     # --- Input boxes for Row 2 with data ---
+    row2_y = pdf.get_y()
     start_x = pdf.get_x()
     # Draw boxes first
-    pdf.rect(start_x, pdf.get_y(), col_w_2, pdf.form_cell_h)
-    pdf.set_xy(start_x + 1, pdf.get_y() + 1.5)
+    pdf.rect(start_x, row2_y, col_w_2, pdf.form_cell_h)
+    pdf.set_xy(start_x + 1, row2_y + 1.5)
     pdf.cell(col_w_2 - 2, pdf.form_cell_h - 2, onq_user)
     
     box2_x = start_x + col_w_2 + 2
-    pdf.rect(box2_x, pdf.get_y(), col_w_2, pdf.form_cell_h)
-    pdf.set_xy(box2_x + 1, pdf.get_y() + 1.5)
+    pdf.rect(box2_x, row2_y, col_w_2, pdf.form_cell_h)
+    pdf.set_xy(box2_x + 1, row2_y + 1.5)
     pdf.cell(col_w_2 - 2, pdf.form_cell_h - 2, email)
     
     # --- Sub-labels ---
@@ -553,16 +573,21 @@ def draw_system_sections(pdf, access_permissions, system_categories):
         # Get access permissions for this category
         category_access = access_permissions.get(category_id, {})
         
-        # Get systems that this position has access to
+        # Get only systems that have access permissions
         accessible_systems = []
+        
         for system in category.get("systems", []):
             system_id = system["id"]
+            system_name = system["name"]
+            
+            # Check if this system has access permission
             if category_access.get(system_id, False):
-                accessible_systems.append(system["name"])
+                accessible_systems.append(system_name)
         
-        # If there are accessible systems, draw the section
+        # If there are accessible systems in this category, draw the section
+        # with all accessible systems marked with 'x' for stylistic purposes
         if accessible_systems:
-            pdf.draw_system_section(category_name, accessible_systems)
+            pdf.draw_system_section(category_name, accessible_systems, accessible_systems)
 
 
 if __name__ == "__main__":
